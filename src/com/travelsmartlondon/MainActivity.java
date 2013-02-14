@@ -1,15 +1,9 @@
 package com.travelsmartlondon;
 
-
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 
 public class MainActivity extends Activity {
 
@@ -26,22 +20,6 @@ public class MainActivity extends Activity {
 	      new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, items);
 
 	    main_listView.setAdapter(adapter);
-	    
-	    main_listView.setOnItemClickListener(new OnItemClickListener() {
-
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view, int position,
-					long id) {
-				
-				if( ((TextView)view).getText().toString() == "Show Map")
-				{
-					Intent intent = new Intent(MainActivity.this,ShowMapActivity.class);
-					startActivity(intent);
-				}
-				
-				
-			}
-	    });
 	}
 
 	/*
