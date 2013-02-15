@@ -1,1 +1,18 @@
+# Folders with auto-generated content
+bin/
+gen/
+
+# Ignore files that are OS/Platform dependent
 .DS_Store
+
+# Eclipse project-related files
+.project
+.properties
+proguard/
+
+# Built Application Files
+*.apk
+*.ap_
+
+# Java class files
+*.class
