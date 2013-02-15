@@ -1,0 +1,178 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".crowdednessActivity" >
+    
+    <TextView
+        android:id="@+id/crowdednessLabel"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Expected crowdedness"
+        android:textSize="30sp"/>
+   
+    <LinearLayout
+        android:id="@+id/crowdimages"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/crowdednessLabel" >
+
+        <ImageView
+            android:id="@+id/imageview1"
+	        android:layout_width="110dp"
+	        android:layout_height="110dp"
+	        android:layout_weight="1"/>
+         <ImageView
+            android:id="@+id/imageview2"
+	        android:layout_width="110dp"
+	        android:layout_height="110dp"
+	        android:layout_weight="1" />
+         <ImageView
+	        android:id="@+id/imageview3"
+	        android:layout_width="110dp"
+	        android:layout_height="110dp"
+	        android:layout_weight="1"/>
+         <ImageView
+	        android:id="@+id/imageview4"
+	        android:layout_width="110dp"
+	        android:layout_height="110dp"
+	        android:layout_weight="1" />
+         <ImageView
+	        android:id="@+id/imageview5"
+	        android:layout_width="110dp"
+	        android:layout_height="110dp"
+	        android:layout_weight="1"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/timepicker_crowdedness"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/crowdimages" >
+
+        <Spinner
+            android:id="@+id/spinner1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+         
+          <TextView
+        android:id="@+id/expectedcrowdedness"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="14dp"
+        android:layout_weight="1"
+        android:gravity="right"
+        android:paddingRight="10dp"
+        android:textSize="25sp" />
+
+    </LinearLayout>
+    
+    <TextView
+        android:id="@+id/twittersection"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="14dp"
+        android:gravity="left"
+        android:paddingRight="10dp"
+        android:text="What users are saying:"
+        android:layout_below="@+id/timepicker_crowdedness"
+        android:textSize="30sp" />
+
+    
+    <LinearLayout 
+        android:id="@+id/twitter1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/twittersection" >
+          
+        <ImageView
+	        android:id="@+id/imageview5"
+	        android:layout_width="60dp"
+	        android:layout_height="60dp"
+	        android:src="@drawable/twitbird"
+	        android:layout_weight="2"/>
+        
+        <TextView
+        android:id="@+id/twittersection"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="14dp"
+        android:layout_weight="2"
+        android:gravity="left"
+        android:paddingRight="10dp"
+        android:paddingLeft="10dp"
+        android:text="Euston is sooooo busy right now!!!!"
+        android:layout_below="@+id/timepicker_crowdedness"
+        android:textSize="20sp" />
+        
+    </LinearLayout>
+    
+    
+    <LinearLayout 
+        android:id="@+id/twitter2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/twitter1" >
+          
+        <ImageView
+	        android:id="@+id/imageview5"
+	        android:layout_width="60dp"
+	        android:layout_height="60dp"
+	        android:src="@drawable/twitbird"
+	        android:layout_weight="2"/>
+        
+        <TextView
+        android:id="@+id/twittersection"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="14dp"
+        android:layout_weight="2"
+        android:gravity="left"
+        android:paddingRight="10dp"
+        android:paddingLeft="10dp"
+        android:text="Euston is so bad at this time!!! Too many people"
+        android:layout_below="@+id/timepicker_crowdedness"
+        android:textSize="20sp" />
+        
+    </LinearLayout>
+    
+    <LinearLayout 
+        android:id="@+id/twitter3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/twitter2" >
+          
+        <ImageView
+	        android:id="@+id/imageview5"
+	        android:layout_width="60dp"
+	        android:layout_height="60dp"
+	        android:src="@drawable/twitbird"
+	        android:layout_weight="2"/>
+        
+        <TextView
+        android:id="@+id/twittersection"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="14dp"
+        android:layout_weight="2"
+        android:gravity="left"
+        android:paddingRight="10dp"
+        android:paddingLeft="10dp"
+        android:text="Just missed my train!!!! so crowded :("
+        android:layout_below="@+id/timepicker_crowdedness"
+        android:textSize="20sp" />
+        
+    </LinearLayout>
+    
+    
+    <Button
+     android:layout_height="wrap_content"
+     android:layout_width="wrap_content"
+     android:gravity="center"
+     android:layout_alignParentBottom="true"
+     android:layout_centerHorizontal="true"
+     android:text="Give your comment now"
+     android:onClick="selfDestruct" />
+
+</RelativeLayout>

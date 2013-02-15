@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">TSL</string>
+    <string name="menu_settings">Settings</string>
+    <string name="title_activity_results">Bus Countdown</string>
+    <string name="title_activity_tube_choice_fragment">TubeChoiceFragment</string>
+    <string name="title_activity_tube_countdown">TubeCountdownActivity</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_crowdedness">CrowdednessActivity</string>
+
+    <string-array name="time">
+        <item>5:00am</item>
+        <item>5:15am</item>
+        <item>5:30am</item>
+        <item>5:45am</item>
+        <item>6:00am</item>
+        <item>6:15am</item>
+        <item>6:30am</item>
+        <item>6:45am</item>
+        <item>7:00am</item>
+        <item>7:15am</item>
+        <item>7:30am</item>
+        <item>7:45am</item>
+        <item>8:00am</item>
+        <item>8:15am</item>
+        <item>8:30am</item>
+        <item>8:45am</item>
+        <item>9:00am</item>
+        <item>9:15am</item>
+        <item>9:30am</item>
+        <item>9:45am</item>
+        <item>10:00am</item>
+        <item>10:15am</item>
+        <item>10:30am</item>
+        <item>10:45am</item>
+        <item>11:00am</item>
+        <item>11:15am</item>
+        <item>11:30am</item>
+        <item>11:45am</item>
+        <item>12:00pm</item>
+        <item>12:15pm</item>
+        <item>12:30pm</item>
+        <item>12:45pm</item>
+        <item>13:00pm</item>
+        <item>13:15pm</item>
+        <item>13:30pm</item>
+        <item>13:45pm</item>
+        <item>14:00pm</item>
+        <item>14:15pm</item>
+        <item>14:30pm</item>
+        <item>14:45pm</item>
+        <item>15:00pm</item>
+        <item>15:15pm</item>
+        <item>15:30pm</item>
+        <item>15:45pm</item>
+        <item>16:00pm</item>
+        <item>16:15pm</item>
+        <item>16:30pm</item>
+        <item>16:45pm</item>
+        <item>17:00pm</item>
+        <item>17:15pm</item>
+        <item>17:30pm</item>
+        <item>17:45pm</item>
+        <item>18:00pm</item>
+        <item>18:15pm</item>
+        <item>18:30pm</item>
+        <item>18:45pm</item>
+        <item>19:00pm</item>
+        <item>19:15pm</item>
+        <item>19:30pm</item>
+        <item>19:45pm</item>
+        <item>20:00pm</item>
+        <item>20:15pm</item>
+        <item>20:30pm</item>
+        <item>20:45pm</item>
+        <item>21:00pm</item>
+        <item>21:15pm</item>
+        <item>21:30pm</item>
+        <item>21:45pm</item>
+        <item>22:00pm</item>
+        <item>22:15pm</item>
+        <item>22:30pm</item>
+        <item>22:45pm</item>
+        <item>23:00pm</item>
+        <item>23:15pm</item>
+        <item>23:30pm</item>
+        <item>23:45pm</item>
+        <item>12:00am</item>
+        <item>12:15am</item>
+        <item>12:30am</item>
+        <item>12:45am</item>
+        <item>01:00am</item>
+        <item>01:15am</item>
+        <item>01:30am</item>
+        <item>01:45am</item>
+        <item>02:00am</item>
+        <item>02:15am</item>
+        <item>02:30am</item>
+        <item>02:45am</item>
+        
+    </string-array>
+</resources>
