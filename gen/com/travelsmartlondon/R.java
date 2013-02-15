@@ -5,7 +5,7 @@
  * should not be modified by hand.
  */
 
-package com.example.mapsample;
+package com.travelsmartlondon;
 
 public final class R {
     public static final class array {
@@ -273,20 +273,20 @@ containing a value of this type.
            <colgroup align="left" />
            <colgroup align="left" />
            <tr><th>Attribute</th><th>Description</th></tr>
-           <tr><td><code>{@link #MapAttrs_cameraBearing com.example.mapsample:cameraBearing}</code></td><td></td></tr>
-           <tr><td><code>{@link #MapAttrs_cameraTargetLat com.example.mapsample:cameraTargetLat}</code></td><td></td></tr>
-           <tr><td><code>{@link #MapAttrs_cameraTargetLng com.example.mapsample:cameraTargetLng}</code></td><td></td></tr>
-           <tr><td><code>{@link #MapAttrs_cameraTilt com.example.mapsample:cameraTilt}</code></td><td></td></tr>
-           <tr><td><code>{@link #MapAttrs_cameraZoom com.example.mapsample:cameraZoom}</code></td><td></td></tr>
-           <tr><td><code>{@link #MapAttrs_mapType com.example.mapsample:mapType}</code></td><td></td></tr>
-           <tr><td><code>{@link #MapAttrs_uiCompass com.example.mapsample:uiCompass}</code></td><td></td></tr>
-           <tr><td><code>{@link #MapAttrs_uiRotateGestures com.example.mapsample:uiRotateGestures}</code></td><td></td></tr>
-           <tr><td><code>{@link #MapAttrs_uiScrollGestures com.example.mapsample:uiScrollGestures}</code></td><td></td></tr>
-           <tr><td><code>{@link #MapAttrs_uiTiltGestures com.example.mapsample:uiTiltGestures}</code></td><td></td></tr>
-           <tr><td><code>{@link #MapAttrs_uiZoomControls com.example.mapsample:uiZoomControls}</code></td><td></td></tr>
-           <tr><td><code>{@link #MapAttrs_uiZoomGestures com.example.mapsample:uiZoomGestures}</code></td><td></td></tr>
-           <tr><td><code>{@link #MapAttrs_useViewLifecycle com.example.mapsample:useViewLifecycle}</code></td><td></td></tr>
-           <tr><td><code>{@link #MapAttrs_zOrderOnTop com.example.mapsample:zOrderOnTop}</code></td><td></td></tr>
+           <tr><td><code>{@link #MapAttrs_cameraBearing com.travelsmartlondon:cameraBearing}</code></td><td></td></tr>
+           <tr><td><code>{@link #MapAttrs_cameraTargetLat com.travelsmartlondon:cameraTargetLat}</code></td><td></td></tr>
+           <tr><td><code>{@link #MapAttrs_cameraTargetLng com.travelsmartlondon:cameraTargetLng}</code></td><td></td></tr>
+           <tr><td><code>{@link #MapAttrs_cameraTilt com.travelsmartlondon:cameraTilt}</code></td><td></td></tr>
+           <tr><td><code>{@link #MapAttrs_cameraZoom com.travelsmartlondon:cameraZoom}</code></td><td></td></tr>
+           <tr><td><code>{@link #MapAttrs_mapType com.travelsmartlondon:mapType}</code></td><td></td></tr>
+           <tr><td><code>{@link #MapAttrs_uiCompass com.travelsmartlondon:uiCompass}</code></td><td></td></tr>
+           <tr><td><code>{@link #MapAttrs_uiRotateGestures com.travelsmartlondon:uiRotateGestures}</code></td><td></td></tr>
+           <tr><td><code>{@link #MapAttrs_uiScrollGestures com.travelsmartlondon:uiScrollGestures}</code></td><td></td></tr>
+           <tr><td><code>{@link #MapAttrs_uiTiltGestures com.travelsmartlondon:uiTiltGestures}</code></td><td></td></tr>
+           <tr><td><code>{@link #MapAttrs_uiZoomControls com.travelsmartlondon:uiZoomControls}</code></td><td></td></tr>
+           <tr><td><code>{@link #MapAttrs_uiZoomGestures com.travelsmartlondon:uiZoomGestures}</code></td><td></td></tr>
+           <tr><td><code>{@link #MapAttrs_useViewLifecycle com.travelsmartlondon:useViewLifecycle}</code></td><td></td></tr>
+           <tr><td><code>{@link #MapAttrs_zOrderOnTop com.travelsmartlondon:zOrderOnTop}</code></td><td></td></tr>
            </table>
            @see #MapAttrs_cameraBearing
            @see #MapAttrs_cameraTargetLat
@@ -310,7 +310,7 @@ containing a value of this type.
             0x7f01000c, 0x7f01000d
         };
         /**
-          <p>This symbol is the offset where the {@link com.example.mapsample.R.attr#cameraBearing}
+          <p>This symbol is the offset where the {@link com.travelsmartlondon.R.attr#cameraBearing}
           attribute's value can be found in the {@link #MapAttrs} array.
 
 
@@ -324,7 +324,7 @@ containing a value of this type.
         */
         public static final int MapAttrs_cameraBearing = 1;
         /**
-          <p>This symbol is the offset where the {@link com.example.mapsample.R.attr#cameraTargetLat}
+          <p>This symbol is the offset where the {@link com.travelsmartlondon.R.attr#cameraTargetLat}
           attribute's value can be found in the {@link #MapAttrs} array.
 
 
@@ -338,7 +338,7 @@ containing a value of this type.
         */
         public static final int MapAttrs_cameraTargetLat = 2;
         /**
-          <p>This symbol is the offset where the {@link com.example.mapsample.R.attr#cameraTargetLng}
+          <p>This symbol is the offset where the {@link com.travelsmartlondon.R.attr#cameraTargetLng}
           attribute's value can be found in the {@link #MapAttrs} array.
 
 
@@ -352,7 +352,7 @@ containing a value of this type.
         */
         public static final int MapAttrs_cameraTargetLng = 3;
         /**
-          <p>This symbol is the offset where the {@link com.example.mapsample.R.attr#cameraTilt}
+          <p>This symbol is the offset where the {@link com.travelsmartlondon.R.attr#cameraTilt}
           attribute's value can be found in the {@link #MapAttrs} array.
 
 
@@ -366,7 +366,7 @@ containing a value of this type.
         */
         public static final int MapAttrs_cameraTilt = 4;
         /**
-          <p>This symbol is the offset where the {@link com.example.mapsample.R.attr#cameraZoom}
+          <p>This symbol is the offset where the {@link com.travelsmartlondon.R.attr#cameraZoom}
           attribute's value can be found in the {@link #MapAttrs} array.
 
 
@@ -380,7 +380,7 @@ containing a value of this type.
         */
         public static final int MapAttrs_cameraZoom = 5;
         /**
-          <p>This symbol is the offset where the {@link com.example.mapsample.R.attr#mapType}
+          <p>This symbol is the offset where the {@link com.travelsmartlondon.R.attr#mapType}
           attribute's value can be found in the {@link #MapAttrs} array.
 
 
@@ -399,7 +399,7 @@ containing a value of this type.
         */
         public static final int MapAttrs_mapType = 0;
         /**
-          <p>This symbol is the offset where the {@link com.example.mapsample.R.attr#uiCompass}
+          <p>This symbol is the offset where the {@link com.travelsmartlondon.R.attr#uiCompass}
           attribute's value can be found in the {@link #MapAttrs} array.
 
 
@@ -413,7 +413,7 @@ containing a value of this type.
         */
         public static final int MapAttrs_uiCompass = 6;
         /**
-          <p>This symbol is the offset where the {@link com.example.mapsample.R.attr#uiRotateGestures}
+          <p>This symbol is the offset where the {@link com.travelsmartlondon.R.attr#uiRotateGestures}
           attribute's value can be found in the {@link #MapAttrs} array.
 
 
@@ -427,7 +427,7 @@ containing a value of this type.
         */
         public static final int MapAttrs_uiRotateGestures = 7;
         /**
-          <p>This symbol is the offset where the {@link com.example.mapsample.R.attr#uiScrollGestures}
+          <p>This symbol is the offset where the {@link com.travelsmartlondon.R.attr#uiScrollGestures}
           attribute's value can be found in the {@link #MapAttrs} array.
 
 
@@ -441,7 +441,7 @@ containing a value of this type.
         */
         public static final int MapAttrs_uiScrollGestures = 8;
         /**
-          <p>This symbol is the offset where the {@link com.example.mapsample.R.attr#uiTiltGestures}
+          <p>This symbol is the offset where the {@link com.travelsmartlondon.R.attr#uiTiltGestures}
           attribute's value can be found in the {@link #MapAttrs} array.
 
 
@@ -455,7 +455,7 @@ containing a value of this type.
         */
         public static final int MapAttrs_uiTiltGestures = 9;
         /**
-          <p>This symbol is the offset where the {@link com.example.mapsample.R.attr#uiZoomControls}
+          <p>This symbol is the offset where the {@link com.travelsmartlondon.R.attr#uiZoomControls}
           attribute's value can be found in the {@link #MapAttrs} array.
 
 
@@ -469,7 +469,7 @@ containing a value of this type.
         */
         public static final int MapAttrs_uiZoomControls = 10;
         /**
-          <p>This symbol is the offset where the {@link com.example.mapsample.R.attr#uiZoomGestures}
+          <p>This symbol is the offset where the {@link com.travelsmartlondon.R.attr#uiZoomGestures}
           attribute's value can be found in the {@link #MapAttrs} array.
 
 
@@ -483,7 +483,7 @@ containing a value of this type.
         */
         public static final int MapAttrs_uiZoomGestures = 11;
         /**
-          <p>This symbol is the offset where the {@link com.example.mapsample.R.attr#useViewLifecycle}
+          <p>This symbol is the offset where the {@link com.travelsmartlondon.R.attr#useViewLifecycle}
           attribute's value can be found in the {@link #MapAttrs} array.
 
 
@@ -497,7 +497,7 @@ containing a value of this type.
         */
         public static final int MapAttrs_useViewLifecycle = 12;
         /**
-          <p>This symbol is the offset where the {@link com.example.mapsample.R.attr#zOrderOnTop}
+          <p>This symbol is the offset where the {@link com.travelsmartlondon.R.attr#zOrderOnTop}
           attribute's value can be found in the {@link #MapAttrs} array.
 
 

@@ -5,7 +5,7 @@
  * should not be modified by hand.
  */
 
-package com.example.mapsample;
+package com.travelsmartlondon;
 
 public final class Manifest {
     public static final class permission {

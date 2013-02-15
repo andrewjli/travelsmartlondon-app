@@ -1,6 +1,6 @@
 package com.travelsmartlondon;
 
-import com.example.mapsample.R;
+import com.travelsmartlondon.R;
 
 import android.app.Activity;
 import android.os.Bundle;

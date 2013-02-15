@@ -18,7 +18,7 @@ import android.view.Window;
 import android.widget.CompoundButton;
 import android.widget.ToggleButton;
 
-import com.example.mapsample.R;
+import com.travelsmartlondon.R;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -32,7 +32,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class MapActivity extends FragmentActivity implements OnMarkerClickListener{ // implements OnMarkerClickListener {
     public final static String ID_CODE = "com.travelsmartlondon.ID_CODE";
-    public final static String EXTRA_MESSAGE = "come.example.mapsample.EXTRA_MESSAGE";
+    public final static String EXTRA_MESSAGE = "come.travelsmartlondon.EXTRA_MESSAGE";
     private static final int DIALOG_ALERT = 10;
     private Marker tempMarker;
 

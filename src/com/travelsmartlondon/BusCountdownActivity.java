@@ -14,7 +14,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.example.mapsample.R;
+import com.travelsmartlondon.R;
 
 import android.app.ListActivity;
 import android.content.Intent;
