@@ -6,8 +6,10 @@ gen/
 .DS_Store
 
 # Eclipse project-related files
+.settings/
 .project
-.properties
+local.properties
+project.properties
 proguard/
 
 # Built Application Files
