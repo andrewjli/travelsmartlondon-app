@@ -1,20 +1,63 @@
-# Folders with auto-generated content
-bin/
-gen/
-
-# Ignore files that are OS/Platform dependent
+# OSX Files
 .DS_Store
+.AppleDouble
+.LSOverride
+Icon
+.Spotlight-V100
+.Trashes
+._*
 
-# Eclipse project-related files
+# Windows Files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Linux Files
+.*
+!.gitignore
+*~
+
+# Eclipse files
 .settings/
+bin/**
+tmp/**
+tmp/**/*
+proguard/
+.classpath
+.loadpath
 .project
+.metadata
 local.properties
 project.properties
-proguard/
+*.pydevproject
+*.tmp
+*.bak
+*.swp
+*~.nib
+
+# External Tool Builders
+.externalToolBuilders/
+
+# Locally Stored "Eclipse Launch Configurations"
+*.launch
+
+# CDT-Specific
+.cproject
+
+# PDT-Specific
+.buildpath
+
+# Generated Files
+bin/
+gen/
 
 # Built Application Files
 *.apk
 *.ap_
 
-# Java class files
+# Java Class Files
 *.class
+
+# Files for the Dex VM
+*.dex
