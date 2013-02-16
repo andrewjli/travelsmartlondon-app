@@ -4,29 +4,29 @@ import com.google.android.gms.maps.model.LatLng;
 
 
 public class Station{
-	String name;
-	String code;
-	double x;
-	double y;
+	private String _name;
+	private String _code;
+	private double _x;
+	private double _y;
 
 
 	public Station(String name, String code, double x, double y){
-		this.name = name;
-		this.code = code;
-		this.x = x;
-		this.y = y;
+		this._name = name;
+		this._code = code;
+		this._x = x;
+		this._y = y;
 	}
 	
 	public String getName(){
-		return this.name;
+		return this._name;
 	}
 	
 	public String getCode(){
-		return this.code;
+		return this._code;
 	}
 	
 	public LatLng getCoordinates(){
-		return new LatLng(x,y);
+		return new LatLng(_x,_y);
 	}
 	
 }
