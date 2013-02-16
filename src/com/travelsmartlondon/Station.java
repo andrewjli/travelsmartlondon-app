@@ -6,8 +6,8 @@ import com.google.android.gms.maps.model.LatLng;
 public class Station{
 	private String _name;
 	private String _code;
-	private double _x;
-	private double _y;
+	protected double _x;
+	protected double _y;
 
 
 	public Station(String name, String code, double x, double y){
