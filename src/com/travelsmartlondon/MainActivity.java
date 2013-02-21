@@ -15,29 +15,25 @@ import android.widget.TextView;
 
 public class MainActivity extends Activity {
 
-	private ListView main_listView;
+	private ListView _mainListView;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 		
-		main_listView = (ListView) findViewById(R.id.main_activity_listView);
+		this._mainListView = (ListView) findViewById(R.id.main_activity_listView);
 	    String[] items = new String[] {"Show Map", "Tube Lines", "Log in", "About Travel Smart London"};
-	    ArrayAdapter<String> adapter =
-	      new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, items);
-
-	    main_listView.setAdapter(adapter);
-	    
-	    main_listView.setOnItemClickListener(new OnItemClickListener() {
-
+	    ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, items);
+	    this._mainListView.setAdapter(adapter);
+	    this._mainListView.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				if( ((TextView)view).getText().toString() == "Show Map"){
 					Intent intent = new Intent(MainActivity.this,MapActivity.class);
 					startActivity(intent);
 				} else if(((TextView)view).getText().toString() == "Tube Lines"){
-		//			BLARRRG
+					//TODO: Implement the screen
 				} else if(((TextView)view).getText().toString() == "Log in") {
 					Intent intent = new Intent(MainActivity.this,LoginActivity.class);
 					startActivity(intent);

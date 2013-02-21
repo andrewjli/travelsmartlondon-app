@@ -14,15 +14,15 @@ import android.widget.TextView;
 
 public class CrowdednessActivity extends Activity {
 	
-	private static final String ALMOST_EMPTY = "ALMOST EMPTY";
-	private static final String NORMAL = "NORMAL";
-	private static final String CROWDED = "CROWDED";
-	private static final String VERY_CROWDED = "VERY CROWDED";
-	private static final String EXTREMELY_CROWDED = "EXTREMELY CROWDED";
+	public static final String ALMOST_EMPTY = "ALMOST EMPTY";
+	public static final String NORMAL = "NORMAL";
+	public static final String CROWDED = "CROWDED";
+	public static final String VERY_CROWDED = "VERY CROWDED";
+	public static final String EXTREMELY_CROWDED = "EXTREMELY CROWDED";
 	
 	
-	private String currentCrowdedness;
-	private int[] imageViews = {
+	private String _currentCrowdedness;
+	private int[] _imageViews = {
 		    R.id.imageview1,
 		    R.id.imageview2,
 		    R.id.imageview3,
@@ -31,31 +31,31 @@ public class CrowdednessActivity extends Activity {
 		    };
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+	protected void onCreate(Bundle savedInstanceState_) {
+		super.onCreate(savedInstanceState_);
 		setContentView(R.layout.crowdedness);
 		
-		currentCrowdedness = NORMAL ;
+		this._currentCrowdedness = NORMAL ;
 		
         setTitle("Euston");
 		
-		TextView crowdedness = (TextView) this.findViewById(R.id.expectedcrowdedness);
-		crowdedness.setText(currentCrowdedness);
+		TextView crowdedness = (TextView) findViewById(R.id.expectedcrowdedness);
+		crowdedness.setText(this._currentCrowdedness);
 		
 		
-		if(currentCrowdedness.equals(ALMOST_EMPTY)){
+		if(this._currentCrowdedness.equals(ALMOST_EMPTY)){
 			this.setCrowdednessImages(1);
 		} 
-		else if (currentCrowdedness.equals(NORMAL)){
+		else if (_currentCrowdedness.equals(NORMAL)){
 			this.setCrowdednessImages(2);
 		}
-		else if (currentCrowdedness.equals(CROWDED)){
+		else if (_currentCrowdedness.equals(CROWDED)){
 			this.setCrowdednessImages(3);
 		}
-		else if (currentCrowdedness.equals(VERY_CROWDED)){
+		else if (_currentCrowdedness.equals(VERY_CROWDED)){
 			this.setCrowdednessImages(4);
 		}
-		else if (currentCrowdedness.equals(EXTREMELY_CROWDED)){
+		else if (_currentCrowdedness.equals(EXTREMELY_CROWDED)){
 			this.setCrowdednessImages(5);
 		}
 		
@@ -69,12 +69,12 @@ public class CrowdednessActivity extends Activity {
 		spinner.setAdapter(adapter);
 		spinner.setSelection(adapter.getPosition("15:00pm"));
 	}
-	private void setCrowdednessImages(int m)
+	private void setCrowdednessImages(int m_)
 	{
 		
-		for(int n=0;n<m;n++)
+		for(int n=0;n<m_;n++)
 		{
-			ImageView imageview = (ImageView) findViewById(imageViews[n]);
+			ImageView imageview = (ImageView) findViewById(_imageViews[n]);
 			imageview.setImageResource(R.drawable.crowdednesswatermark);
 		}
 	}

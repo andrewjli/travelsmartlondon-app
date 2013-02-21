@@ -1,24 +1,11 @@
 package com.travelsmartlondon;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
-
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import com.travelsmartlondon.R;
+import java.util.List;
 
 import android.app.ListActivity;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -27,11 +14,10 @@ import android.widget.SimpleAdapter;
 
 
 public class TubeCountdownActivity extends ListActivity{
-	private Button close_button;
-	private ArrayList<HashMap<String,String>> list;
-	SimpleAdapter adapter;
+	private Button _closeButton;
+	private List<HashMap<String,String>> _entryList;
+	private SimpleAdapter _adapter;
 	
-    /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,46 +27,38 @@ public class TubeCountdownActivity extends ListActivity{
         String name = intent.getStringExtra(MapActivity.EXTRA_MESSAGE);
 
 		setTitle(name);
-        list = new ArrayList<HashMap<String,String>>(); 
+        this._entryList = new ArrayList<HashMap<String,String>>(); 
 
-        adapter = new SimpleAdapter(
-        		this,
-        		list,
-        		R.layout.custom_row_view,
-        		new String[] {"Route","Time","Destination"},
-        		new int[] {R.id.text1,R.id.text2, R.id.text3}
-        		);
+        this._adapter = new SimpleAdapter(this,
+        								_entryList,
+        								R.layout.custom_row_view,
+        								new String[] {"Route","Time","Destination"},
+        								new int[] {R.id.text1,R.id.text2, R.id.text3}
+        								);
     	
 
         
-		close_button = (Button) findViewById(R.id.close_button);
-				close_button.setOnClickListener(new OnClickListener() {
-		    @Override
-		    public void onClick(View v) {
-		        finish();
-		    }
-		});
-
-				populateList("High Barnet", "Due", "Northern Line");
-				populateList("Morden via Bank", "1 min", "Northern Line");
-				populateList("Brixton", "2 min", "Victoria Line");
-				populateList("Seven Sisters", "2 min", "Victoria Line");
-				populateList("Edgeware", "3 min", "Northern Line");
-				populateList("High Barnet", "3 min", "Northern Line");
-				populateList("Walthamstow Central", "4 min", "Victoria Line");
-				populateList("Kennington via Charing X", "5 min", "Northern Line");
-				populateList("High Barnet", "5 min", "Northern Line");
-				populateList("Brixton", "7 min", "Victoria Line");
-				populateList("Morden", "8 min", "Northern Line");
-				populateList("Walthamtow Cetral", "8 min", "Victoria");
-				
-				
-				setListAdapter(adapter);
-        
-        
-
-
-
+		this._closeButton = (Button) findViewById(R.id.close_button);
+		this._closeButton.setOnClickListener(new OnClickListener() {
+		    									@Override
+		    									public void onClick(View v) {
+		    										finish();
+		    									}
+											});
+		populateList("High Barnet", "Due", "Northern Line");
+		populateList("Morden via Bank", "1 min", "Northern Line");
+		populateList("Brixton", "2 min", "Victoria Line");
+		populateList("Seven Sisters", "2 min", "Victoria Line");
+		populateList("Edgeware", "3 min", "Northern Line");
+		populateList("High Barnet", "3 min", "Northern Line");
+		populateList("Walthamstow Central", "4 min", "Victoria Line");
+		populateList("Kennington via Charing X", "5 min", "Northern Line");
+		populateList("High Barnet", "5 min", "Northern Line");
+		populateList("Brixton", "7 min", "Victoria Line");
+		populateList("Morden", "8 min", "Northern Line");
+		populateList("Walthamtow Cetral", "8 min", "Victoria");
+		
+		setListAdapter(_adapter);
     }
     
     private void populateList(String route, String time, String destination){
@@ -88,7 +66,7 @@ public class TubeCountdownActivity extends ListActivity{
     	temp.put("Route", route);
     	temp.put("Time", time);
     	temp.put("Destination", destination);
-    	list.add(temp);
+    	_entryList.add(temp);
     }
     
 

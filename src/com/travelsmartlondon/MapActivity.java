@@ -18,11 +18,6 @@ import android.view.Window;
 import android.widget.CompoundButton;
 import android.widget.ToggleButton;
 
-import com.travelsmartlondon.R;
-import com.travelsmartlondon.station.BikeDock;
-import com.travelsmartlondon.station.BusStop;
-import com.travelsmartlondon.station.Station;
-import com.travelsmartlondon.station.TubeStation;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -32,14 +27,18 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.travelsmartlondon.station.BikeDock;
+import com.travelsmartlondon.station.BusStop;
+import com.travelsmartlondon.station.Station;
+import com.travelsmartlondon.station.TubeStation;
 
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-public class MapActivity extends FragmentActivity implements OnMarkerClickListener{ // implements OnMarkerClickListener {
-    public final static String ID_CODE = "com.travelsmartlondon.ID_CODE";
-    public final static String EXTRA_MESSAGE = "come.travelsmartlondon.EXTRA_MESSAGE";
+public class MapActivity extends FragmentActivity implements OnMarkerClickListener{ 
+    public static final String ID_CODE = "com.travelsmartlondon.ID_CODE";
+    public static final String EXTRA_MESSAGE = "come.travelsmartlondon.EXTRA_MESSAGE";
     private static final int DIALOG_ALERT = 10;
+    
     private Marker tempMarker;
-
 	private GoogleMap map;
 	private Map<Marker, Station> busList = new HashMap<Marker, Station>();
 	private List<Marker> busMarkerList = new ArrayList<Marker>();
@@ -48,7 +47,10 @@ public class MapActivity extends FragmentActivity implements OnMarkerClickListen
 	private Map<Marker, Station> tubeList = new HashMap<Marker, Station>();
 	private List<Marker> tubeMarkerList = new ArrayList<Marker>();
 
-	//initialising sample bus stops
+	/*
+	Dummy tube stations for the purpose of the demo 
+	TODO: Real-time live data
+	 */
 	BusStop goodge = new BusStop("Goodge Street Station", "54958", 529487,181895);
 	BusStop percy = new BusStop("Percy Street","71293", 529650, 181656);
 	BusStop ucl = new BusStop("University College Hospital", "57596",529548, 182199);
@@ -75,8 +77,7 @@ public class MapActivity extends FragmentActivity implements OnMarkerClickListen
 		map.setMyLocationEnabled(true);
 		map.getUiSettings().setZoomControlsEnabled(false);
 		map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(51.523524,-0.132823), 15));
-		
-		//adding markers
+
 		addMarker(goodge, map);
 		addMarker(percy, map);
 		addMarker(warren, map);;
@@ -184,7 +185,6 @@ public class MapActivity extends FragmentActivity implements OnMarkerClickListen
 	                	   }
 	               }
 	        });
-	        // Create the AlertDialog object and return it
 	        AlertDialog dialog = builder.create();
 	        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
 	        dialog.show();
@@ -214,14 +214,15 @@ public class MapActivity extends FragmentActivity implements OnMarkerClickListen
 		return tempMarker;
 	}
 	
-/**
+	/*
 	void showDialog(){
         android.app.FragmentManager fm = getFragmentManager();
         TubeChoiceFragment tubeChoiceDialog = new TubeChoiceFragment();
         tubeChoiceDialog.show(fm, "fragment_edit_name");
 	}
 
-**/
+ 	*/
+	
 	private void addMarker(Station station, GoogleMap map){
 		if(station.getClass() == BusStop.class){
 			Marker marker = map.addMarker(new MarkerOptions().position(station.getCoordinates()));
