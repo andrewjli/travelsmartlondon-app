@@ -19,6 +19,10 @@ import android.widget.CompoundButton;
 import android.widget.ToggleButton;
 
 import com.travelsmartlondon.R;
+import com.travelsmartlondon.station.BikeDock;
+import com.travelsmartlondon.station.BusStop;
+import com.travelsmartlondon.station.Station;
+import com.travelsmartlondon.station.TubeStation;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;

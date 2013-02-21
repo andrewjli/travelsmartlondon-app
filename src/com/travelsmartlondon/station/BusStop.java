@@ -1,4 +1,4 @@
-package com.travelsmartlondon;
+package com.travelsmartlondon.station;
 
 import com.google.android.gms.maps.model.LatLng;
 import uk.me.jstott.jcoord.*;

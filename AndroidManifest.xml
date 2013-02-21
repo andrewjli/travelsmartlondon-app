@@ -64,8 +64,13 @@
         </activity>
         <activity
             android:name="com.travelsmartlondon.CrowdednessActivity"
-            android:label="@string/title_activity_crowdedness" 
-            android:theme="@android:style/Theme.Dialog">
+            android:label="@string/title_activity_crowdedness"
+            android:theme="@android:style/Theme.Dialog" >
+        </activity>
+        <activity
+            android:name="com.travelsmartlondon.LoginActivity"
+            android:label="@string/title_activity_login"
+            android:windowSoftInputMode="adjustResize|stateVisible" >
         </activity>
     </application>
 

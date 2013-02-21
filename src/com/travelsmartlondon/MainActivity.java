@@ -38,6 +38,9 @@ public class MainActivity extends Activity {
 					startActivity(intent);
 				} else if(((TextView)view).getText().toString() == "Tube Lines"){
 		//			BLARRRG
+				} else if(((TextView)view).getText().toString() == "Log in") {
+					Intent intent = new Intent(MainActivity.this,LoginActivity.class);
+					startActivity(intent);
 				}
 			}
 	    });

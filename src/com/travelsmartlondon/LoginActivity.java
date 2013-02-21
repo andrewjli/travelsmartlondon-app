@@ -1,228 +1,259 @@
 package com.travelsmartlondon;
+
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.Intent;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.view.KeyEvent;
+import android.view.Menu;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+import android.widget.TextView;
 
-
+/**
+ * Activity which displays a login screen to the user, offering registration as
+ * well.
+ */
 public class LoginActivity extends Activity {
-	private EditText _emailField;
-	private EditText _passwordField;
-	private Button _goButton;
-	private Button _cancelButton;
-	
-	private String _emailAddress;
-	private String _password;
-	
-	private void initialize(){
-		this._emailField = (EditText) findViewById(R.id.emailField);
-		this._passwordField = (EditText) findViewById(R.id.passwordField);
-		this._goButton = (Button) findViewById(R.id.goButton);
-		this._cancelButton = (Button) findViewById(R.id.cancelButton);
-	}
-	
-	@Override
-	protected void onCreate(Bundle savedInstanceState_) {
-		super.onCreate(savedInstanceState_);
-		setContentView(R.layout.main);
-		initialize();
-		
-		this._goButton.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				_emailAddress = _emailField.getText().toString();
-				_password = _passwordField.getText().toString();
-				
-			}
-		});
-	}
-	
-	
-	/*
-	protected void onGetAuthToken(Bundle bundle) {
-        String auth_token = bundle.getString(AccountManager.KEY_AUTHTOKEN);
-        new GetCookieTask().execute(auth_token);
-	}
-	
-	private class GetAuthTokenCallback implements AccountManagerCallback {
-        public void run(AccountManagerFuture result) {
-                Bundle bundle;
-                try {
-                        bundle = (Bundle) result.getResult();
-                        Intent intent = (Intent)bundle.get(AccountManager.KEY_INTENT);
-                        if(intent != null) {
-                                // User input required
-                                startActivity(intent);
-                        } else {
-                                onGetAuthToken(bundle);
-                        }
-                } catch (OperationCanceledException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
-                } catch (AuthenticatorException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
-                } catch (IOException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
-                }
-        }
-	}; */
-	
-	
-	/*
-	 public class LoginServlet extends javax.servlet.http.HttpServlet {
-
-	final static String YAHOO_ENDPOINT = "https://me.yahoo.com";
-	final static String GOOGLE_ENDPOINT = "https://www.google.com/accounts/o8/id";
-
-	private final Log log = LogFactory.getLog(this.getClass());
-	private static final long serialVersionUID = 309579782731258702L;
-	private ServletContext context;
-	private ConsumerManager manager;
-
-	public void init(ServletConfig config) throws ServletException {
-		super.init(config);
-		context = config.getServletContext();
-		try {
-			this.manager = new ConsumerManager();
-		} catch (ConsumerException e) {
-			throw new ServletException(e);
-		}
-	}
-
-protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-throws ServletException, IOException {
-log.debug("------------------------");
-log.debug("context: " + context);
-Identifier identifier = this.verifyResponse(req);
-log.debug("identifier: " + identifier);
-// if openid login succeded redirect to home page using our demo account
-//if your site is open to anyone without login you can do the redirect directly
-if (identifier != null) {
-WebAuthentication pwl = new WebAuthentication();
-pwl.login("guest", "guest");**
-resp.sendRedirect("/index.jsp");
-} else {
-System.out.println("login with openid failed");
-}
-}
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
-		String identifier = req.getParameter("identifier");
-		this.authRequest(identifier, req, resp);
-	}
-
-	// --- placing the authentication request ---
-	public String authRequest(String userSuppliedString,
-			HttpServletRequest httpReq, HttpServletResponse httpResp)
-			throws IOException {
-		try {
-			// configure the return_to URL where your application will receive
-			// the authentication responses from the OpenID provider
-			String returnToUrl = httpReq.getRequestURL().toString();
-
-			// --- Forward proxy setup (only if needed) ---
-			// ProxyProperties proxyProps = new ProxyProperties();
-			// proxyProps.setProxyName("proxy.example.com");
-			// proxyProps.setProxyPort(8080);
-			// HttpClientFactory.setProxyProperties(proxyProps);
-
-			// perform discovery on the user-supplied identifier
-			List discoveries = manager.discover(userSuppliedString);
-
-			// attempt to associate with the OpenID provider
-			// and retrieve one service endpoint for authentication
-			DiscoveryInformation discovered = manager.associate(discoveries);
-
-			// store the discovery information in the user's session
-			httpReq.getSession().setAttribute("openid-disc", discovered);
-
-			// obtain a AuthRequest message to be sent to the OpenID provider
-			AuthRequest authReq = manager.authenticate(discovered, returnToUrl);
-
-			FetchRequest fetch = FetchRequest.createFetchRequest();
-			if (userSuppliedString.startsWith(GOOGLE_ENDPOINT)) {
-				fetch.addAttribute("email",
-						"http://axschema.org/contact/email", true);
-				fetch.addAttribute("firstName",
-						"http://axschema.org/namePerson/first", true);
-				fetch.addAttribute("lastName",
-						"http://axschema.org/namePerson/last", true);
-			} else if (userSuppliedString.startsWith(YAHOO_ENDPOINT)) {
-				fetch.addAttribute("email",
-						"http://axschema.org/contact/email", true);
-				fetch.addAttribute("fullname",
-						"http://axschema.org/namePerson", true);
-			} else { // works for myOpenID
-				fetch.addAttribute("fullname",
-						"http://schema.openid.net/namePerson", true);
-				fetch.addAttribute("email",
-						"http://schema.openid.net/contact/email", true);
-			}
-
-			// attach the extension to the authentication request
-			authReq.addExtension(fetch);
-
-			httpResp.sendRedirect(authReq.getDestinationUrl(true));
-
-		} catch (OpenIDException e) {
-			// present error to the user
-		}
-
-		return null;
-	}
-
-	// --- processing the authentication response ---
-	public Identifier verifyResponse(HttpServletRequest httpReq) {
-		try {
-			// extract the parameters from the authentication response
-			// (which comes in as a HTTP request from the OpenID provider)
-			ParameterList response = new ParameterList(
-					httpReq.getParameterMap());
-
-			// retrieve the previously stored discovery information
-			DiscoveryInformation discovered = (DiscoveryInformation) httpReq
-					.getSession().getAttribute("openid-disc");
-
-			// extract the receiving URL from the HTTP request
-			StringBuffer receivingURL = httpReq.getRequestURL();
-			String queryString = httpReq.getQueryString();
-			if (queryString != null && queryString.length() > 0)
-				receivingURL.append("?").append(httpReq.getQueryString());
-
-			// verify the response; ConsumerManager needs to be the same
-			// (static) instance used to place the authentication request
-			VerificationResult verification = manager.verify(
-					receivingURL.toString(), response, discovered);
-
-			// examine the verification result and extract the verified
-			// identifier
-			Identifier verified = verification.getVerifiedId();
-			if (verified != null) {
-				AuthSuccess authSuccess = (AuthSuccess) verification
-						.getAuthResponse();
-
-				if (authSuccess.hasExtension(AxMessage.OPENID_NS_AX)) {
-					FetchResponse fetchResp = (FetchResponse) authSuccess
-							.getExtension(AxMessage.OPENID_NS_AX);
-
-					List emails = fetchResp.getAttributeValues("email");
-					String email = (String) emails.get(0);
-					log.info("OpenIdlogin done with email: " + email);
-				}
-
-				return verified; // success
-			}
-		} catch (OpenIDException e) {
-			// present error to the user
-		}
-
-		return null;
-	}
-
-}
+	/**
+	 * A dummy authentication store containing known user names and passwords.
+	 * TODO: remove after connecting to a real authentication system.
 	 */
+	private static final String[] DUMMY_CREDENTIALS = new String[] {
+			"foo@example.com:hello", "bar@example.com:world" };
+
+	/**
+	 * The default email to populate the email field with.
+	 */
+	public static final String EXTRA_EMAIL = "com.example.android.authenticatordemo.extra.EMAIL";
+
+	/**
+	 * Keep track of the login task to ensure we can cancel it if requested.
+	 */
+	private UserLoginTask mAuthTask = null;
+
+	// Values for email and password at the time of the login attempt.
+	private String mEmail;
+	private String mPassword;
+
+	// UI references.
+	private EditText mEmailView;
+	private EditText mPasswordView;
+	private View mLoginFormView;
+	private View mLoginStatusView;
+	private TextView mLoginStatusMessageView;
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+
+		setContentView(R.layout.login);
+
+		// Set up the login form.
+		mEmail = getIntent().getStringExtra(EXTRA_EMAIL);
+		mEmailView = (EditText) findViewById(R.id.email);
+		mEmailView.setText(mEmail);
+
+		mPasswordView = (EditText) findViewById(R.id.password);
+		mPasswordView
+				.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+					@Override
+					public boolean onEditorAction(TextView textView, int id,
+							KeyEvent keyEvent) {
+						if (id == R.id.login || id == EditorInfo.IME_NULL) {
+							attemptLogin();
+							return true;
+						}
+						return false;
+					}
+				});
+
+		mLoginFormView = findViewById(R.id.login_form);
+		mLoginStatusView = findViewById(R.id.login_status);
+		mLoginStatusMessageView = (TextView) findViewById(R.id.login_status_message);
+
+		findViewById(R.id.sign_in_button).setOnClickListener(
+				new View.OnClickListener() {
+					@Override
+					public void onClick(View view) {
+						attemptLogin();
+					}
+				});
+		
+		findViewById(R.id.cancel_button).setOnClickListener(
+				new View.OnClickListener() {
+					@Override
+					public void onClick(View view) {
+						cancelLoginAction();
+					}
+				});
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		super.onCreateOptionsMenu(menu);
+		getMenuInflater().inflate(R.menu.login, menu);
+		return true;
+	}
+	
+	/**
+	 * Cancels the login action and causes the screen to revert back to main screen.
+	 */
+	public void cancelLoginAction() {
+		Intent intent = new Intent(LoginActivity.this,MainActivity.class);
+		startActivity(intent);
+	}
+
+	/**
+	 * Attempts to sign in or register the account specified by the login form.
+	 * If there are form errors (invalid email, missing fields, etc.), the
+	 * errors are presented and no actual login attempt is made.
+	 */
+	public void attemptLogin() {
+		if (mAuthTask != null) {
+			return;
+		}
+
+		// Reset errors.
+		mEmailView.setError(null);
+		mPasswordView.setError(null);
+
+		// Store values at the time of the login attempt.
+		mEmail = mEmailView.getText().toString();
+		mPassword = mPasswordView.getText().toString();
+
+		boolean cancel = false;
+		View focusView = null;
+
+		// Check for a valid password.
+		if (TextUtils.isEmpty(mPassword)) {
+			mPasswordView.setError(getString(R.string.error_field_required));
+			focusView = mPasswordView;
+			cancel = true;
+		} else if (mPassword.length() < 4) {
+			mPasswordView.setError(getString(R.string.error_invalid_password));
+			focusView = mPasswordView;
+			cancel = true;
+		}
+
+		// Check for a valid email address.
+		if (TextUtils.isEmpty(mEmail)) {
+			mEmailView.setError(getString(R.string.error_field_required));
+			focusView = mEmailView;
+			cancel = true;
+		} else if (!mEmail.contains("@")) {
+			mEmailView.setError(getString(R.string.error_invalid_email));
+			focusView = mEmailView;
+			cancel = true;
+		}
+
+		if (cancel) {
+			// There was an error; don't attempt login and focus the first
+			// form field with an error.
+			focusView.requestFocus();
+		} else {
+			// Show a progress spinner, and kick off a background task to
+			// perform the user login attempt.
+			mLoginStatusMessageView.setText(R.string.login_progress_signing_in);
+			showProgress(true);
+			mAuthTask = new UserLoginTask();
+			mAuthTask.execute((Void) null);
+		}
+	}
+
+	/**
+	 * Shows the progress UI and hides the login form.
+	 */
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
+	private void showProgress(final boolean show) {
+		// On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
+		// for very easy animations. If available, use these APIs to fade-in
+		// the progress spinner.
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
+			int shortAnimTime = getResources().getInteger(
+					android.R.integer.config_shortAnimTime);
+
+			mLoginStatusView.setVisibility(View.VISIBLE);
+			mLoginStatusView.animate().setDuration(shortAnimTime)
+					.alpha(show ? 1 : 0)
+					.setListener(new AnimatorListenerAdapter() {
+						@Override
+						public void onAnimationEnd(Animator animation) {
+							mLoginStatusView.setVisibility(show ? View.VISIBLE
+									: View.GONE);
+						}
+					});
+
+			mLoginFormView.setVisibility(View.VISIBLE);
+			mLoginFormView.animate().setDuration(shortAnimTime)
+					.alpha(show ? 0 : 1)
+					.setListener(new AnimatorListenerAdapter() {
+						@Override
+						public void onAnimationEnd(Animator animation) {
+							mLoginFormView.setVisibility(show ? View.GONE
+									: View.VISIBLE);
+						}
+					});
+		} else {
+			// The ViewPropertyAnimator APIs are not available, so simply show
+			// and hide the relevant UI components.
+			mLoginStatusView.setVisibility(show ? View.VISIBLE : View.GONE);
+			mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
+		}
+	}
+
+	/**
+	 * Represents an asynchronous login/registration task used to authenticate
+	 * the user.
+	 */
+	public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
+		@Override
+		protected Boolean doInBackground(Void... params) {
+			// TODO: attempt authentication against a network service.
+
+			try {
+				// Simulate network access.
+				Thread.sleep(2000);
+			} catch (InterruptedException e) {
+				return false;
+			}
+
+			for (String credential : DUMMY_CREDENTIALS) {
+				String[] pieces = credential.split(":");
+				if (pieces[0].equals(mEmail)) {
+					// Account exists, return true if the password matches.
+					return pieces[1].equals(mPassword);
+				}
+			}
+
+			// TODO: register the new account here.
+			return true;
+		}
+
+		@Override
+		protected void onPostExecute(final Boolean success) {
+			mAuthTask = null;
+			showProgress(false);
+
+			if (success) {
+				finish();
+			} else {
+				mPasswordView
+						.setError(getString(R.string.error_incorrect_password));
+				mPasswordView.requestFocus();
+			}
+		}
+
+		@Override
+		protected void onCancelled() {
+			mAuthTask = null;
+			showProgress(false);
+		}
+	}
 }

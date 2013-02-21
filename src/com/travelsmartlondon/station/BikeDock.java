@@ -1,4 +1,4 @@
-package com.travelsmartlondon;
+package com.travelsmartlondon.station;
 
 
 public class BikeDock extends Station{
