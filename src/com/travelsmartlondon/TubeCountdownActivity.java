@@ -3,6 +3,7 @@ package com.travelsmartlondon;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import android.app.ListActivity;
 import android.content.Intent;
@@ -15,7 +16,7 @@ import android.widget.SimpleAdapter;
 
 public class TubeCountdownActivity extends ListActivity{
 	private Button _closeButton;
-	private List<HashMap<String,String>> _entryList;
+	private List<Map<String,String>> _entryList;
 	private SimpleAdapter _adapter;
 	
     @Override
@@ -27,7 +28,7 @@ public class TubeCountdownActivity extends ListActivity{
         String name = intent.getStringExtra(MapActivity.EXTRA_MESSAGE);
 
 		setTitle(name);
-        this._entryList = new ArrayList<HashMap<String,String>>(); 
+        this._entryList = new ArrayList<Map<String,String>>(); 
 
         this._adapter = new SimpleAdapter(this,
         								_entryList,
@@ -36,8 +37,6 @@ public class TubeCountdownActivity extends ListActivity{
         								new int[] {R.id.text1,R.id.text2, R.id.text3}
         								);
     	
-
-        
 		this._closeButton = (Button) findViewById(R.id.close_button);
 		this._closeButton.setOnClickListener(new OnClickListener() {
 		    									@Override

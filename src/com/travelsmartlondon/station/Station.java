@@ -3,7 +3,7 @@ package com.travelsmartlondon.station;
 import com.google.android.gms.maps.model.LatLng;
 
 
-public class Station{
+public abstract class Station{
 	private String _name;
 	private String _code;
 	protected double _x;

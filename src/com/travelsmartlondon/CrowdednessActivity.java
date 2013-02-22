@@ -1,12 +1,7 @@
 package com.travelsmartlondon;
 
-import com.travelsmartlondon.R;
-
 import android.app.Activity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.Window;
-
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.Spinner;
