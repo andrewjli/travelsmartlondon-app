@@ -3,8 +3,6 @@ package com.travelsmartlondon;
 
 import java.io.IOException;
 
-import com.travelsmartlondon.context.TSLApplicationContext;
-
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.accounts.AccountManagerCallback;
@@ -15,20 +13,22 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Handler.Callback;
 import android.os.Message;
-import android.text.format.Time;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.travelsmartlondon.context.TSLApplicationContext;
 
 public class MainActivity extends Activity {
 
@@ -38,10 +38,14 @@ public class MainActivity extends Activity {
 	public static final String TUBE_LINES = "Tube Lines";
 	public static final String LOGIN_WITH_GOOGLE = "Log in with Google";
 	public static final String LOGOUT = "Log out";
+	public static final String LOGIN = "Log in";
 	public static final String ABOUT_US = "About Travel Smart London";
 	public static final String ACCOUNT_TYPE_GOOGLE = "com.google";
 	public static final String AUTHORISATION_SCOPE_VIEW_YOUR_TASKS = "View your tasks";
 	public static final String AUTHORISATION_SCOPE_MANAGE_YOUR_TASKS = "Manage your tasks";
+	public static final String WELCOME_MESSAGE = "Welcome ";
+	public static final String GOODBYE_MESSAGE = "Goodbye ";
+	public static final String ERROR_MESSAGE = "Error occurred: ";
 	
 	
 	@Override
@@ -65,7 +69,7 @@ public class MainActivity extends Activity {
 					showProgress(true);
 					loginWithGoogleAccount(view);
 				} else if(((TextView)view).getText().toString() == LOGOUT) {
-					System.out.println(TSLApplicationContext.getInstance().currentEmailAddress());
+					messageSuccessful(TSLApplicationContext.getInstance().currentEmailAddress(), LOGOUT);
 					TSLApplicationContext.getInstance().injectEmailAddressOnceUserLoggedIn(null);
 					((TextView)view).setText(LOGIN_WITH_GOOGLE);
 				} else if(((TextView)view).getText().toString() == ABOUT_US) {
@@ -93,7 +97,7 @@ public class MainActivity extends Activity {
 
 		@Override
 		public boolean handleMessage(Message msg) {
-			System.out.println("Messaage: " + msg.toString());
+			messageSuccessful(" PERMISSION NOT GRANTED", "NOT");
 			return false;
 		}
 		
@@ -121,8 +125,9 @@ public class MainActivity extends Activity {
 	        // The token is a named value in the bundle. The name of the value
 	        // is stored in the constant AccountManager.KEY_AUTHTOKEN.
 	        String token = bundle.getString(AccountManager.KEY_AUTHTOKEN);//not used
-	        TSLApplicationContext.getInstance().injectEmailAddressOnceUserLoggedIn(bundle.getString(AccountManager.KEY_ACCOUNT_NAME));
-	        //_mainListView.getAdapter()
+	        String emailAddress = bundle.getString(AccountManager.KEY_ACCOUNT_NAME);
+	        TSLApplicationContext.getInstance().injectEmailAddressOnceUserLoggedIn(emailAddress);
+	        messageSuccessful(emailAddress, LOGIN);
 	        ((TextView)this._view).setText(LOGOUT);
 	        showProgress(false);
 	    }
@@ -130,6 +135,20 @@ public class MainActivity extends Activity {
 	
 	protected void onActivityResult (int requestCode, int resultCode, Intent data) {
 		
+	}
+	
+	private void messageSuccessful(String emailAddress_, String loginLogout_) {
+		AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+		String title = (loginLogout_.equals(LOGIN)) ? WELCOME_MESSAGE : 
+					((loginLogout_.equals(LOGOUT))? GOODBYE_MESSAGE : ERROR_MESSAGE);
+		builder.setMessage(loginLogout_ + " successful!")
+	       .setTitle(title + emailAddress_);
+		builder.setNegativeButton("OK", new DialogInterface.OnClickListener() {
+		      public void onClick(DialogInterface dialog, int which) {
+		    	  dialog.dismiss();
+		    } });
+		AlertDialog dialog = builder.create();
+		dialog.show();
 	}
 	
 	/**
