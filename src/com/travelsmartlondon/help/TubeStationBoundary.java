@@ -10,12 +10,12 @@ public class TubeStationBoundary {
     private static final Point[] polygon7 = { new Point(51.5000260600,-0.4997822330), new Point(51.4002345400,-0.5000596570), new Point(51.3998299400,0.0330555780), new Point(51.4999801100,0.0342627740), new Point(51.5000260600,-0.4997822330) };
     private static final Point[] polygon8 = { new Point(51.7492432000,-0.6992719480), new Point(51.5004317800,-0.6988988600), new Point(51.4996901400,-0.3999094850), new Point(51.7501986600,-0.3997713550), new Point(51.7492432000,-0.6992719480) };
     
-    public static final Boundary BOUNDARY_1 = new Boundary(polygon1);
-    public static final Boundary BOUNDARY_2 = new Boundary(polygon2);
-    public static final Boundary BOUNDARY_3 = new Boundary(polygon3);
-    public static final Boundary BOUNDARY_4 = new Boundary(polygon4);
-    public static final Boundary BOUNDARY_5 = new Boundary(polygon5);
-    public static final Boundary BOUNDARY_6 = new Boundary(polygon6);
-    public static final Boundary BOUNDARY_7 = new Boundary(polygon7);
-    public static final Boundary BOUNDARY_8 = new Boundary(polygon8);
+    public static final Boundary BOUNDARY_CENTRAL_1 = new Boundary(polygon1);
+    public static final Boundary BOUNDARY_CENTRAL_2 = new Boundary(polygon2);
+    public static final Boundary BOUNDARY_CENTRAL_3 = new Boundary(polygon3);
+    public static final Boundary BOUNDARY_CENTRAL_4 = new Boundary(polygon4);
+    public static final Boundary BOUNDARY_NORTH_5 = new Boundary(polygon5);
+    public static final Boundary BOUNDARY_NORTHWEST_6 = new Boundary(polygon6);
+    public static final Boundary BOUNDARY_SOUTH_7 = new Boundary(polygon7);
+    public static final Boundary BOUNDARY_NORTHEAST_8 = new Boundary(polygon8);
 }
