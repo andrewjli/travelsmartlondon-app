@@ -24,9 +24,11 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.travelsmartlondon.handler.WeatherHandler;
 import com.travelsmartlondon.station.BikeDock;
 import com.travelsmartlondon.station.BusStop;
 import com.travelsmartlondon.station.Station;
@@ -73,10 +75,12 @@ public class MapActivity extends FragmentActivity implements OnMarkerClickListen
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.map_view);
 		GooglePlayServicesUtil.isGooglePlayServicesAvailable(getApplicationContext());
+		WeatherHandler.getInstance();
 		map = ((SupportMapFragment)getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
 		map.setMyLocationEnabled(true);
+		map.getMyLocation();
 		map.getUiSettings().setZoomControlsEnabled(false);
-		map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(51.523524,-0.132823), 15));
+//		map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(51.523524,-0.132823), 15));
 
 		addMarker(goodge, map);
 		addMarker(percy, map);
@@ -142,6 +146,11 @@ public class MapActivity extends FragmentActivity implements OnMarkerClickListen
 
 		map.setOnMarkerClickListener(this);
 	}
+	
+//    @Override
+//    public void onCameraChange(final CameraPosition position) {
+//        mCameraTextView.setText(position.toString());
+//    }
 
 	@Override
 	public boolean onMarkerClick(Marker marker) {
