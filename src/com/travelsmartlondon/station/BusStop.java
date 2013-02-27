@@ -12,7 +12,7 @@ public class BusStop extends Station{
 
 	//TFL provides the bus stop coordinates in UK OSGB eastings and northings format. this method converts it into LatLng
 	public LatLng getCoordinates(){
-		uk.me.jstott.jcoord.LatLng temp = (new OSRef(_x,_y).toLatLng());
+		uk.me.jstott.jcoord.LatLng temp = (new OSRef(_latitude,_longitude).toLatLng());
 		temp.toWGS84();
 		return new LatLng(temp.getLat(),temp.getLng());
 	}
