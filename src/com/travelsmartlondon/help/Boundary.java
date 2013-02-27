@@ -10,6 +10,7 @@ class Boundary {
    public Boundary(final Point[] points_) {
        this._points = points_;
    }
+   
    /**
     * Return true if the given point is contained inside the boundary.
     * See: http://www.ecse.rpi.edu/Homepages/wrf/Research/Short_Notes/pnpoly.html
