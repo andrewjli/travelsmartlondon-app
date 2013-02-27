@@ -62,8 +62,10 @@ public class stationDAO {
 				table = "stations6";
 				break;
 			default:
-				table = 
+				return null;
 		}
+		
+		stations = getStationsFromDB(table);
 		
 		Cursor cursor = tslDB.query(table,null,null,null,null,null,null);
 		cursor.moveToFirst();
@@ -71,6 +73,11 @@ public class stationDAO {
 		while(!cursor.isAfterLast()){
 			Station station = cursorToStation(cursor);
 		}
+		
+		return stations;
+	}
+
+	private List<TubeStation> getStationsFromDB(String table) {
 		
 		return null;
 	}
