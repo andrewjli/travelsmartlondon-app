@@ -30,7 +30,7 @@ public class stationDAO {
 		dbHelper.close();
 	  }
 	
-	public ArrayList<TubeStation> getStationsByArea(int area_){
+	public List<TubeStation> getStationsByArea(int area_){
 		
 		List<TubeStation> stations = new ArrayList<TubeStation>();
 		
@@ -77,7 +77,7 @@ public class stationDAO {
 		return stations;
 	}
 
-	private List<TubeStation> getStationsFromDB(String table) {
+	private ArrayList<TubeStation> getStationsFromDB(String table) {
 		
 		return null;
 	}
