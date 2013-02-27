@@ -15,24 +15,24 @@ import com.travelsmartlondon.station.TubeStation;
 
 public class stationDAO {
 	
-	private SQLiteDatabase tslDB;
-	private DBSQLiteHelper dbHelper;
+	private SQLiteDatabase _tslDB;
+	private DBSQLiteHelper _dbHelper;
 	
 	public stationDAO(Context context){
-		dbHelper = new DBSQLiteHelper(context);
+		_dbHelper = new DBSQLiteHelper(context);
 	}
 	
 	public void open() throws SQLException {
-	    tslDB = dbHelper.getWritableDatabase();
+	    _tslDB = _dbHelper.getWritableDatabase();
 	  }
 
 	public void close() {    
-		dbHelper.close();
+		_dbHelper.close();
 	  }
 	
-	public List<TubeStation> getStationsByArea(int area_){
+	public List<Station> getStationsByArea(int area_){
 		
-		List<TubeStation> stations = new ArrayList<TubeStation>();
+		List<Station> stations = new ArrayList<Station>();
 		
 		String table;
 				
@@ -67,27 +67,43 @@ public class stationDAO {
 		
 		stations = getStationsFromDB(table);
 		
-		Cursor cursor = tslDB.query(table,null,null,null,null,null,null);
+		return stations;
+	}
+
+	private ArrayList<Station> getStationsFromDB(String table_) {
+		
+		ArrayList<Station> stations = new ArrayList<Station>();
+		
+		Cursor cursor = _tslDB.query(table_,null,null,null,null,null,null);
+		
 		cursor.moveToFirst();
 		
 		while(!cursor.isAfterLast()){
 			Station station = cursorToStation(cursor);
+			stations.add(station);
+			cursor.moveToNext();
 		}
 		
-		return stations;
+		//Close the cursor
+		cursor.close();
+	    return stations;
+		
 	}
 
-	private ArrayList<TubeStation> getStationsFromDB(String table) {
+	private Station cursorToStation(Cursor cursor_) {
 		
-		return null;
-	}
-
-	private TubeStation cursorToStation(Cursor cursor) {
+		ArrayList<String> lines = new ArrayList<String>();
+		for(int n=3;n<8;n++){
+			// n refers to the columns in the stations table corresponding to lines
+			lines.add(cursor_.getString(n));
+		}
 		
 		
+		Station station = new TubeStation(cursor_.getString(0),cursor_.getInt(1),cursor_.getString(2),
+				cursor_.getDouble(9),cursor_.getDouble(8),lines);
 		
-		Station station = new TubeStation(cursor.getString(0),);
-		return null;
+		
+		return station;
 	}
 	
 	
