@@ -16,7 +16,7 @@ public class DatabaseClassificator {
         }
         return instance;
 	}
-	
+	//CTesting commit
 	public int checkTubeStationMapArea(final Point p_) {
 
         boolean test1 = TubeStationBoundary.BOUNDARY_1.contains(p_);
