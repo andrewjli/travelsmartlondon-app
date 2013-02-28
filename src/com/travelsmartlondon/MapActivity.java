@@ -16,6 +16,7 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -71,6 +72,8 @@ public class MapActivity extends FragmentActivity implements OnMarkerClickListen
 	private String weatherDesc;
 	private String weatherIconUrl;
 	private Drawable weatherIcon;
+	
+	private JSONArray jsonBikeArray;
 
 	/*
 	Dummy tube stations for the purpose of the demo 
@@ -109,6 +112,7 @@ public class MapActivity extends FragmentActivity implements OnMarkerClickListen
 		longitude = "-0.1331019000000424";
 
 		weatherHttpRequest(latitude, longitude);
+		bikeHttpRequest(latitude, longitude);
 		
 		addMarker(goodge, map);
 		addMarker(percy, map);
@@ -204,6 +208,8 @@ public class MapActivity extends FragmentActivity implements OnMarkerClickListen
 		if(tubeList.containsKey(marker)){
 			setTempMarker(marker);
 			showDialog(DIALOG_ALERT);
+		}else{
+			marker.showInfoWindow();
 		}
 		return true;
 	}
@@ -266,11 +272,11 @@ public class MapActivity extends FragmentActivity implements OnMarkerClickListen
 			busList.put(marker,station);
 			busMarkerList.add(marker);
 		}
-		if(station.getClass() == BikeDock.class){
-			Marker marker = map.addMarker(new MarkerOptions().position(station.getCoordinates()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
-			bikeList.put(marker,station);
-			bikeMarkerList.add(marker);
-		}
+//		if(station.getClass() == BikeDock.class){
+//			Marker marker = map.addMarker(new MarkerOptions().position(station.getCoordinates()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+//			bikeList.put(marker,station);
+//			bikeMarkerList.add(marker);
+//		}
 		if(station.getClass() == TubeStation.class){
 			Marker marker = map.addMarker(new MarkerOptions().position(station.getCoordinates()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET)));
 			tubeList.put(marker,station);
@@ -336,4 +342,61 @@ public class MapActivity extends FragmentActivity implements OnMarkerClickListen
 		httpGetAsyncTask.execute(latitude_, longitude_);
 	}
 
+
+	private void bikeHttpRequest(String latitude_, String longitude_) {
+		class HttpGetAsyncTask extends AsyncTask<String, Void, String>{
+			@Override
+			protected String doInBackground(String... params) {
+				HttpClient httpClient = new DefaultHttpClient();
+
+				HttpGet httpGet = new HttpGet("http://stud-tfl.cs.ucl.ac.uk/bike?getAtCoordinates,lat=" + params[0] + "&long=" + params[1]);
+				
+				try {
+					HttpResponse httpResponse = httpClient.execute(httpGet);
+					
+					BufferedReader reader = new BufferedReader(new InputStreamReader(httpResponse.getEntity().getContent(), "UTF-8"));
+				    String json = reader.readLine();
+				    jsonBikeArray = new JSONArray(json);
+				    
+				    System.out.println(jsonBikeArray.get(0).toString());
+				    
+					//Error handler ******* to be completed in more detail
+				} catch (ClientProtocolException cpe) {
+					System.out.println("Client Protocol Exception :" + cpe);
+					cpe.printStackTrace();
+				} catch (IOException ioe) {
+					System.out.println("IOException :" + ioe);
+					ioe.printStackTrace();
+				} catch (NullPointerException npe) {
+					System.out.println(" Null Pointer Exception :" + npe);
+					npe.printStackTrace();
+				} catch (JSONException jsone) {
+					//Toast.makeText(getApplicationContext(), "Unable to retrieve data", Toast.LENGTH_LONG).show();
+					System.out.println("JSON Exception :" + jsone);
+					jsone.printStackTrace();
+				}
+				return null;
+			}
+
+			@Override
+			protected void onPostExecute(String result) {
+				
+				try {
+					int index = 0;
+				while(!jsonBikeArray.isNull(index)){
+					map.addMarker(new MarkerOptions().position(new LatLng(jsonBikeArray.getJSONObject(index).getDouble("lat"), jsonBikeArray.getJSONObject(index).getDouble("long")))
+													 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
+													 .title(jsonBikeArray.getJSONObject(index).getString("name"))
+													 .snippet(jsonBikeArray.getJSONObject(index).getString("nbBikes") + "/" + jsonBikeArray.getJSONObject(index).getString("dbDocks") + " bikes available"));
+				index++;
+				}
+				} catch (JSONException e) {
+					System.out.println("BRUH U GON PARSE THE JSON RIGHT");
+					e.printStackTrace();
+				}
+			}
+		}
+		HttpGetAsyncTask httpGetAsyncTask = new HttpGetAsyncTask();
+		httpGetAsyncTask.execute(latitude_, longitude_);
+	}
 }
