@@ -22,7 +22,7 @@ public class BikeHandler {
 	private BikeHandler(){
 		String latitude = "51.52395809999999";
 		String longitude = "-0.1331019000000424";
-		String fuck = connectWithHttpGet(latitude, longitude);
+		String result = connectWithHttpGet(latitude, longitude);
 	}
 	
 

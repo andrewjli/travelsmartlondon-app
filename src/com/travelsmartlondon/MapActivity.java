@@ -102,6 +102,7 @@ public class MapActivity extends FragmentActivity implements OnMarkerClickListen
 		map = ((SupportMapFragment)getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
 		map.setMyLocationEnabled(true);
 		map.getUiSettings().setZoomControlsEnabled(false);
+		map.getUiSettings().setCompassEnabled(false);
 		map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(51.523524,-0.132823), 15));
 		
 		latitude = "51.52395809999999";
@@ -275,7 +276,6 @@ public class MapActivity extends FragmentActivity implements OnMarkerClickListen
 			tubeList.put(marker,station);
 			tubeMarkerList.add(marker);
 		}
-		
 	}
 
 
@@ -301,7 +301,7 @@ public class MapActivity extends FragmentActivity implements OnMarkerClickListen
 				    System.out.println(weatherIconUrl);
 
 				        InputStream is = (InputStream) new URL(weatherIconUrl).getContent();
-				        Drawable image = Drawable.createFromStream(is, "src name");
+				        weatherIcon = Drawable.createFromStream(is, "src name");
 				    
 					//Error handler ******* to be completed in more detail
 				} catch (ClientProtocolException cpe) {
@@ -323,11 +323,12 @@ public class MapActivity extends FragmentActivity implements OnMarkerClickListen
 
 			@Override
 			protected void onPostExecute(String result) {
-				TextView weatherDescTextView = (TextView) findViewById(R.id.weather_desc);
-				weatherDescTextView.setText(weatherDesc);
+//				TextView weatherDescTextView = (TextView) findViewById(R.id.weather_desc);
+//				weatherDescTextView.setText(weatherDesc);
 
 				ImageView weatherIconImageView = (ImageView) findViewById(R.id.weather_icon);
 				weatherIconImageView.setImageDrawable(weatherIcon);
+
 				
 			}
 		}

@@ -60,9 +60,13 @@
 
     <ImageView
         android:id="@+id/weather_icon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"/>
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="12sp"
+        android:layout_marginLeft="12sp"
+        android:alpha="0.77"
+        android:visibility="visible" />
 
 </RelativeLayout>
