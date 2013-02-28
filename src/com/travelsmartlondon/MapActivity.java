@@ -1,9 +1,23 @@
 package com.travelsmartlondon;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
@@ -11,11 +25,15 @@ import android.app.AlertDialog.Builder;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.Window;
 import android.widget.CompoundButton;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -24,11 +42,9 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.travelsmartlondon.handler.WeatherHandler;
 import com.travelsmartlondon.station.BikeDock;
 import com.travelsmartlondon.station.BusStop;
 import com.travelsmartlondon.station.Station;
@@ -48,6 +64,13 @@ public class MapActivity extends FragmentActivity implements OnMarkerClickListen
 	private List<Marker> bikeMarkerList = new ArrayList<Marker>();
 	private Map<Marker, Station> tubeList = new HashMap<Marker, Station>();
 	private List<Marker> tubeMarkerList = new ArrayList<Marker>();
+	
+	private String latitude;
+	private String longitude;
+	
+	private String weatherDesc;
+	private String weatherIconUrl;
+	private Drawable weatherIcon;
 
 	/*
 	Dummy tube stations for the purpose of the demo 
@@ -75,16 +98,20 @@ public class MapActivity extends FragmentActivity implements OnMarkerClickListen
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.map_view);
 		GooglePlayServicesUtil.isGooglePlayServicesAvailable(getApplicationContext());
-		WeatherHandler.getInstance();
+
 		map = ((SupportMapFragment)getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
 		map.setMyLocationEnabled(true);
-		map.getMyLocation();
 		map.getUiSettings().setZoomControlsEnabled(false);
-//		map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(51.523524,-0.132823), 15));
+		map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(51.523524,-0.132823), 15));
+		
+		latitude = "51.52395809999999";
+		longitude = "-0.1331019000000424";
 
+		weatherHttpRequest(latitude, longitude);
+		
 		addMarker(goodge, map);
 		addMarker(percy, map);
-		addMarker(warren, map);;
+		addMarker(warren, map);
 		addMarker(ucl, map);
 		addMarker(ucl1, map);
 		addMarker(gower, map);
@@ -249,6 +276,63 @@ public class MapActivity extends FragmentActivity implements OnMarkerClickListen
 			tubeMarkerList.add(marker);
 		}
 		
+	}
+
+
+	private void weatherHttpRequest(String latitude_, String longitude_) {
+		class HttpGetAsyncTask extends AsyncTask<String, Void, String>{
+			
+			@Override
+			protected String doInBackground(String... params) {
+				HttpClient httpClient = new DefaultHttpClient();
+
+				HttpGet httpGet = new HttpGet("http://stud-tfl.cs.ucl.ac.uk/weather?loc=" + params[0] +"," + params[1]);
+				
+				try {
+					HttpResponse httpResponse = httpClient.execute(httpGet);
+					
+					BufferedReader reader = new BufferedReader(new InputStreamReader(httpResponse.getEntity().getContent(), "UTF-8"));
+				    String json = reader.readLine();
+				    JSONObject jsonObject = new JSONObject(json);
+				    
+				    weatherDesc = jsonObject.getString("WeatherDesc");
+				    System.out.println(weatherDesc);
+				    weatherIconUrl = jsonObject.getString("IconURL");
+				    System.out.println(weatherIconUrl);
+
+				        InputStream is = (InputStream) new URL(weatherIconUrl).getContent();
+				        Drawable image = Drawable.createFromStream(is, "src name");
+				    
+					//Error handler ******* to be completed in more detail
+				} catch (ClientProtocolException cpe) {
+					System.out.println("Client Protocol Exception :" + cpe);
+					cpe.printStackTrace();
+				} catch (IOException ioe) {
+					System.out.println("IOException :" + ioe);
+					ioe.printStackTrace();
+				} catch (NullPointerException npe) {
+					System.out.println(" Null Pointer Exception :" + npe);
+					npe.printStackTrace();
+				} catch (JSONException jsone) {
+					//Toast.makeText(getApplicationContext(), "Unable to retrieve data", Toast.LENGTH_LONG).show();
+					System.out.println("JSON Exception :" + jsone);
+					jsone.printStackTrace();
+				}
+				return null;
+			}
+
+			@Override
+			protected void onPostExecute(String result) {
+				TextView weatherDescTextView = (TextView) findViewById(R.id.weather_desc);
+				weatherDescTextView.setText(weatherDesc);
+
+				ImageView weatherIconImageView = (ImageView) findViewById(R.id.weather_icon);
+				weatherIconImageView.setImageDrawable(weatherIcon);
+				
+			}
+		}
+		HttpGetAsyncTask httpGetAsyncTask = new HttpGetAsyncTask();
+		httpGetAsyncTask.execute(latitude_, longitude_);
 	}
 
 }

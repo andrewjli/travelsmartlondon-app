@@ -29,6 +29,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.travelsmartlondon.context.TSLApplicationContext;
+import com.travelsmartlondon.handler.BikeHandler;
 
 public class MainActivity extends Activity {
 
@@ -52,6 +53,9 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
+		
+//		WeatherHandler.getInstance();
+		BikeHandler.getInstance();
 		
 		this._mainListView = (ListView) findViewById(R.id.main_activity_listView);
 	    String[] items = new String[] {SHOW_MAP, TUBE_LINES, LOGIN_WITH_GOOGLE, ABOUT_US};
