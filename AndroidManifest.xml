@@ -5,10 +5,10 @@
     android:versionName="1.0" >
 
     <permission
-        android:name="com.travelsmartlondon.permission.MAPS_RECEIVE"
+        android:name="your_package_name.permission.MAPS_RECEIVE"
         android:protectionLevel="signature" />
 
-    <uses-permission android:name="com.travelsmartlondon.permission.MAPS_RECEIVE" />
+    <uses-permission android:name="your_package_name.permission.MAPS_RECEIVE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
@@ -75,6 +75,10 @@
             android:name="com.travelsmartlondon.LoginActivity"
             android:label="@string/title_activity_login"
             android:windowSoftInputMode="adjustResize|stateVisible" >
+        </activity>
+        <activity
+            android:name="com.travelsmartlondon.TubeLineActivity"
+            android:label="@string/title_activity_tube_line" >
         </activity>
     </application>
 

@@ -41,11 +41,10 @@ public class BusCountdownActivity extends ListActivity{
 		setTitle(name);
         this._list = new ArrayList<HashMap<String,String>>(); 
         this._adapter = new SimpleAdapter(this,
-					        		this._list,
-					        		R.layout.custom_row_view,
-					        		new String[] {"Route","Time","Destination"},
-					        		new int[] {R.id.text1,R.id.text2, R.id.text3}
-        );
+					        			  this._list,
+					        			  R.layout.custom_row_view,
+					        			  new String[] {"Route","Time","Destination"},
+					        			  new int[] {R.id.text1,R.id.text2, R.id.text3});
 
 		this._closeButton = (Button) findViewById(R.id.close_button);
 		this._closeButton.setOnClickListener(
