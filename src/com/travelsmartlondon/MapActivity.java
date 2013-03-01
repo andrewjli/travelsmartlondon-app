@@ -26,6 +26,7 @@ import android.app.AlertDialog.Builder;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -46,8 +47,6 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.travelsmartlondon.station.BikeDock;
-import com.travelsmartlondon.station.BusStop;
 import com.travelsmartlondon.station.Station;
 import com.travelsmartlondon.station.TubeStation;
 
@@ -56,12 +55,12 @@ public class MapActivity extends FragmentActivity implements OnMarkerClickListen
     public static final String ID_CODE = "com.travelsmartlondon.ID_CODE";
     public static final String EXTRA_MESSAGE = "come.travelsmartlondon.EXTRA_MESSAGE";
     private static final int DIALOG_ALERT = 10;
+    private static final String RADIUS = "1000";
     
     private Marker tempMarker;
 	private GoogleMap map;
-	private Map<Marker, Station> busList = new HashMap<Marker, Station>();
+	private Map<Marker, BusStop> busList = new HashMap<Marker, BusStop>();
 	private List<Marker> busMarkerList = new ArrayList<Marker>();
-	private Map<Marker, Station> bikeList = new HashMap<Marker, Station>();
 	private List<Marker> bikeMarkerList = new ArrayList<Marker>();
 	private Map<Marker, Station> tubeList = new HashMap<Marker, Station>();
 	private List<Marker> tubeMarkerList = new ArrayList<Marker>();
@@ -74,27 +73,17 @@ public class MapActivity extends FragmentActivity implements OnMarkerClickListen
 	private Drawable weatherIcon;
 	
 	private JSONArray jsonBikeArray;
+	private JSONArray jsonBusStopArray;
 
 	/*
 	Dummy tube stations for the purpose of the demo 
 	TODO: Real-time live data
 	 */
-	BusStop goodge = new BusStop("Goodge Street Station", "54958", 529487,181895);
-	BusStop percy = new BusStop("Percy Street","71293", 529650, 181656);
-	BusStop ucl = new BusStop("University College Hospital", "57596",529548, 182199);
-	BusStop ucl1 = new BusStop("University College Hospital", "76205",529373, 182201);
 
 	TubeStation goodgestation = new TubeStation("Goodge Street Station", "GST",51.520424996045500000, -0.134662152092394320);
 	TubeStation warrenstation = new TubeStation("Warren Street Station", "76205",51.524511517547950000, -.138272313383213400);
 	TubeStation eustonstation = new TubeStation("Euston Station", "76205",51.528596260899460000, -.133289718799315530);
 	TubeStation tcrstation = new TubeStation("Tottenham Court Road Station", "76205", 51.516209552513860000, -.130870518140944360);
-
-	BikeDock warren = new BikeDock("Warren Street Station, Euston", "239", 51.52443845,-0.138019439);
-	BikeDock gower = new BikeDock("Gower Place , Euston", "65", 51.52522753,-0.13518856);
-	BikeDock euston = new BikeDock("Euston Road, Euston", "69", 51.5262363,-0.134407652);
-	BikeDock tavistock = new BikeDock("Tavistock Place, Bloomsbury", "89", 51.5262503,-0.123509611);
-	BikeDock malet = new BikeDock("Malet Street, Bloomsbury", "12", 51.52168078,-0.130431727);
-
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -113,16 +102,9 @@ public class MapActivity extends FragmentActivity implements OnMarkerClickListen
 
 		weatherHttpRequest(latitude, longitude);
 		bikeHttpRequest(latitude, longitude);
-		
-		addMarker(goodge, map);
-		addMarker(percy, map);
-		addMarker(warren, map);
-		addMarker(ucl, map);
-		addMarker(ucl1, map);
-		addMarker(gower, map);
-		addMarker(euston, map);
-		addMarker(tavistock, map);
-		addMarker(malet, map);
+		busStopHttpRequest(latitude, longitude, RADIUS);
+
+
 		addMarker(goodgestation, map);
 		addMarker(warrenstation, map);
 		addMarker(eustonstation, map);
@@ -193,18 +175,7 @@ public class MapActivity extends FragmentActivity implements OnMarkerClickListen
 			intent.putExtra(EXTRA_MESSAGE, busList.get(marker).getName());
 			startActivity(intent);
 		}
-		if(bikeList.containsKey(marker)){
-			marker.setTitle(bikeList.get(marker).getName());
-			if(bikeList.get(marker)==gower){
-				marker.setSnippet("13/17 Bikes");				
-			}
-			
-			if(bikeList.get(marker)==warren){
-				marker.setSnippet("4/26 Bikes");				
-			}
-			
-			marker.showInfoWindow();
-		}
+
 		if(tubeList.containsKey(marker)){
 			setTempMarker(marker);
 			showDialog(DIALOG_ALERT);
@@ -267,16 +238,6 @@ public class MapActivity extends FragmentActivity implements OnMarkerClickListen
  	*/
 	
 	private void addMarker(Station station, GoogleMap map){
-		if(station.getClass() == BusStop.class){
-			Marker marker = map.addMarker(new MarkerOptions().position(station.getCoordinates()));
-			busList.put(marker,station);
-			busMarkerList.add(marker);
-		}
-//		if(station.getClass() == BikeDock.class){
-//			Marker marker = map.addMarker(new MarkerOptions().position(station.getCoordinates()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
-//			bikeList.put(marker,station);
-//			bikeMarkerList.add(marker);
-//		}
 		if(station.getClass() == TubeStation.class){
 			Marker marker = map.addMarker(new MarkerOptions().position(station.getCoordinates()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET)));
 			tubeList.put(marker,station);
@@ -342,7 +303,6 @@ public class MapActivity extends FragmentActivity implements OnMarkerClickListen
 		httpGetAsyncTask.execute(latitude_, longitude_);
 	}
 
-
 	private void bikeHttpRequest(String latitude_, String longitude_) {
 		class HttpGetAsyncTask extends AsyncTask<String, Void, String>{
 			@Override
@@ -383,20 +343,99 @@ public class MapActivity extends FragmentActivity implements OnMarkerClickListen
 				
 				try {
 					int index = 0;
-				while(!jsonBikeArray.isNull(index)){
-					map.addMarker(new MarkerOptions().position(new LatLng(jsonBikeArray.getJSONObject(index).getDouble("lat"), jsonBikeArray.getJSONObject(index).getDouble("long")))
-													 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
-													 .title(jsonBikeArray.getJSONObject(index).getString("name"))
-													 .snippet(jsonBikeArray.getJSONObject(index).getString("nbBikes") + "/" + jsonBikeArray.getJSONObject(index).getString("dbDocks") + " bikes available"));
-				index++;
-				}
+					while(!jsonBikeArray.isNull(index)){
+						JSONObject jsonCurrentObject = jsonBikeArray.getJSONObject(index);
+						Marker marker = map.addMarker(new MarkerOptions().position(new LatLng(jsonCurrentObject.getDouble("lat"), jsonCurrentObject.getDouble("long")))
+						                                                 .icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.bike_icon)))
+														                 .title(jsonCurrentObject.getString("name"))
+														                 .snippet(jsonCurrentObject.getString("nbBikes") + "/" + jsonCurrentObject.getString("dbDocks") + " bikes available"));
+						bikeMarkerList.add(marker);
+						index++;
+					}
 				} catch (JSONException e) {
-					System.out.println("BRUH U GON PARSE THE JSON RIGHT");
+					System.out.println("Error in the JSON parsing");
 					e.printStackTrace();
 				}
 			}
 		}
 		HttpGetAsyncTask httpGetAsyncTask = new HttpGetAsyncTask();
 		httpGetAsyncTask.execute(latitude_, longitude_);
+	}
+
+	private void busStopHttpRequest(String latitude_, String longitude_, String radius_) {
+		class HttpGetAsyncTask extends AsyncTask<String, Void, String>{
+			@Override
+			protected String doInBackground(String... params) {
+				HttpClient httpClient = new DefaultHttpClient();
+
+				HttpGet httpGet = new HttpGet("http://stud-tfl.cs.ucl.ac.uk/stops?rad=" + params[0] + "," + params[1] + "," + params[2]);
+				
+				try {
+					HttpResponse httpResponse = httpClient.execute(httpGet);
+					
+					BufferedReader reader = new BufferedReader(new InputStreamReader(httpResponse.getEntity().getContent(), "UTF-8"));
+				    String json = reader.readLine();
+				    JSONObject jsonObject = new JSONObject(json);
+				    jsonBusStopArray = jsonObject.getJSONArray("stations");
+				    
+					//Error handler ******* to be completed in more detail
+				} catch (ClientProtocolException cpe) {
+					System.out.println("Client Protocol Exception :" + cpe);
+					cpe.printStackTrace();
+				} catch (IOException ioe) {
+					System.out.println("IOException :" + ioe);
+					ioe.printStackTrace();
+				} catch (NullPointerException npe) {
+					System.out.println(" Null Pointer Exception :" + npe);
+					npe.printStackTrace();
+				} catch (JSONException jsone) {
+					//Toast.makeText(getApplicationContext(), "Unable to retrieve data", Toast.LENGTH_LONG).show();
+					System.out.println("JSON Exception :" + jsone);
+					jsone.printStackTrace();
+				}
+				return null;
+			}
+
+			@Override
+			protected void onPostExecute(String result) {
+				
+				try {
+					int index = 0;
+					while(!jsonBusStopArray.isNull(index)){
+						JSONObject jsonCurrentObject = jsonBusStopArray.getJSONObject(index);
+						Marker marker = map.addMarker(new MarkerOptions().position(new LatLng(jsonCurrentObject.getDouble("lat"), jsonCurrentObject.getDouble("long")))
+						                                           		 .icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.bus_icon))));
+						busList.put(marker, new BusStop(jsonCurrentObject.getString("stopName"), jsonCurrentObject.getString("stopCode")));
+						busMarkerList.add(marker);
+						index++;
+					}
+				} catch (JSONException e) {
+					System.out.println("Error in the JSON parsing");
+					e.printStackTrace();
+				}
+			}
+		}
+		HttpGetAsyncTask httpGetAsyncTask = new HttpGetAsyncTask();
+		httpGetAsyncTask.execute(latitude_, longitude_, radius_);
+	}
+	
+	class BusStop{
+		private String _name;
+		private String _code;
+		public BusStop(String name_, String code_){
+			this._name = name_;
+			this._code = code_;
+			
+		}
+		public String getName() {
+			return this._name;
+		}
+		public String getCode() {
+			return this._code;
+		}
+
+		//TFL provides the bus stop coordinates in UK OSGB eastings and northings format. this method converts it into LatLng
+
+		
 	}
 }
