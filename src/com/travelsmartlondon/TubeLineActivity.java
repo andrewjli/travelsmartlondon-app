@@ -53,11 +53,14 @@ public class TubeLineActivity extends ListActivity {
 	
 	private List<Map<String,String>> _list;
 	SimpleAdapter _adapter;
+	private Map<Integer, String> _positionLineMap;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_tube_line);
+		
+		_positionLineMap = new ConcurrentHashMap<Integer, String>();
 	    
 		this._list = new ArrayList<Map<String,String>>();
 		this._adapter = new SimpleAdapter(this,
@@ -65,14 +68,45 @@ public class TubeLineActivity extends ListActivity {
         								R.layout.custom_tube_line_view,
         								new String[] {MAP_LINE,MAP_STATUS},
         								new int[] {R.id.line_name_text, R.id.line_status_text}
-										)
-		/*{ 
+										){
+		
+			
 			@Override
 			public View getView(int position_, View convertView_, ViewGroup parent_) {
+				View view = super.getView(position_, convertView_, parent_);
+				String line = _positionLineMap.get(position_);
 				
-				return super.getView(position_, convertView_, parent_);
+				if(line.equals(PICCADILLY_LINE)) {
+					view.setBackgroundResource(R.drawable.gradient_piccadilly);
+				} else if(line.equals(DISTRICT_LINE)) {
+					view.setBackgroundResource(R.drawable.gradient_district);
+				} else if(line.equals(VICTORIA_LINE)) {
+					view.setBackgroundResource(R.drawable.gradient_victoria);
+				} else if(line.equals(CIRCLE_LINE)) {
+					view.setBackgroundResource(R.drawable.gradient_circle);
+				} else if(line.equals(HAMMERSMITH_CITY_LINE)) {
+					view.setBackgroundResource(R.drawable.gradient_hammersmith);
+				} else if(line.equals(BAKERLOO_LINE)) {
+					view.setBackgroundResource(R.drawable.gradient_bakerloo);
+				} else if(line.equals(WATERLOO_CITY_LINE)) {
+					view.setBackgroundResource(R.drawable.gradient_waterloo);
+				} else if(line.equals(CENTRAL_LINE)) {
+					view.setBackgroundResource(R.drawable.gradient_central);
+				} else if(line.equals(JUBILEE_LINE)) {
+					view.setBackgroundResource(R.drawable.gradient_jubilee);
+				} else if(line.equals(METROPOLITAN_LINE)) {
+					view.setBackgroundResource(R.drawable.gradient_metropolitan);
+				} else if(line.equals(NORTHERN_LINE)) {
+					view.setBackgroundResource(R.drawable.gradient_northern);
+				} else if(line.equals(DLR_LINE)) {
+					view.setBackgroundResource(R.drawable.gradient_dlr);
+				} else if(line.equals(OVERGROUND_LINE)) {
+					view.setBackgroundResource(R.drawable.gradient_overground);
+				} 
+				
+				return view;
 			}
-		}*/;
+		};
 		getLineStatusUpdates();
 	}
 	
@@ -105,8 +139,11 @@ public class TubeLineActivity extends ListActivity {
 				    	JSONObject temp = (JSONObject) jsonObject.get(index);
 				    	String line = temp.getString("lineName");
 				    	String status = temp.getString("statusDescription");
+				    	_positionLineMap.put(i, line);
 				    	_list.add(getMapFor(line, status));
 				    };
+				    
+				    System.out.println(_list.toString());
 				    
 
 				} catch (ClientProtocolException cpe) {
