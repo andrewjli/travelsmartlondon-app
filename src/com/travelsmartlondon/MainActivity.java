@@ -64,7 +64,8 @@ public class MainActivity extends Activity {
 					Intent intent = new Intent(MainActivity.this,MapActivity.class);
 					startActivity(intent);
 				} else if(((TextView)view).getText().toString() == TUBE_LINES){
-					//TODO: Implement the screen
+					Intent intent = new Intent(MainActivity.this,TubeLineActivity.class);
+					startActivity(intent);
 				} else if(((TextView)view).getText().toString() == LOGIN_WITH_GOOGLE) {
 					showProgress(true);
 					loginWithGoogleAccount(view);

@@ -1,0 +1,33 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    tools:context=".TubeLineActivity" >
+
+    <LinearLayout
+        android:id="@+id/line_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:dividerHeight="5dp" 
+        android:orientation="vertical" >
+        
+        <TextView
+            android:id="@+id/line_name_text"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:textIsSelectable="true"
+            android:textSize="45sp"
+            android:textStyle="bold" />
+        
+        <TextView
+        android:id="@+id/line_status_text"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:textIsSelectable="true"
+        android:textSize="20sp"
+        android:textStyle="italic"
+        android:typeface="sans" />
+    </LinearLayout>
+    
+</LinearLayout>

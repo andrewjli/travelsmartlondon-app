@@ -99,6 +99,9 @@
         <item>02:15am</item>
         <item>02:30am</item>
         <item>02:45am</item>
-        
     </string-array>
+
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_tube_line">TubeLineActivity</string>
+
 </resources>
