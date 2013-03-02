@@ -142,10 +142,6 @@ public class MapActivity extends FragmentActivity implements OnMarkerClickListen
 		else{
 			_currentLocation = getCurrentLocation();
 
-			
-		
-
-
 		_latitude = Double.toString(_currentLocation.getLatitude());
 		_longitude = Double.toString(_currentLocation.getLongitude());
 
