@@ -58,6 +58,10 @@ public class MapActivity extends FragmentActivity implements OnMarkerClickListen
     private static final int DIALOG_ALERT = 10;
     private static final String RADIUS = "1000";
     
+	ToggleButton busToggle;
+	ToggleButton bikeToggle;
+	ToggleButton tubeToggle;
+
     private Marker tempMarker;
 	private GoogleMap map;
 	private Map<Marker, BusStop> busList = new HashMap<Marker, BusStop>();
@@ -116,8 +120,14 @@ public class MapActivity extends FragmentActivity implements OnMarkerClickListen
 		addMarker(eustonstation, map);
 		addMarker(tcrstation, map);
 		
-		ToggleButton busToggle = (ToggleButton) findViewById(R.id.bus_toggle);
+
+		busToggle = (ToggleButton) findViewById(R.id.bus_toggle);
 		busToggle.setChecked(true);
+		bikeToggle = (ToggleButton) findViewById(R.id.bike_toggle);
+		bikeToggle.setChecked(true);
+		tubeToggle = (ToggleButton) findViewById(R.id.tube_toggle);
+		tubeToggle.setChecked(true);
+		
 		busToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 		    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 		        if (isChecked) {
@@ -132,8 +142,6 @@ public class MapActivity extends FragmentActivity implements OnMarkerClickListen
 		    }
 		});
 
-		ToggleButton bikeToggle = (ToggleButton) findViewById(R.id.bike_toggle);
-		bikeToggle.setChecked(true);
 		bikeToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 		    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 		        if (isChecked) {
@@ -148,8 +156,6 @@ public class MapActivity extends FragmentActivity implements OnMarkerClickListen
 		    }
 		});
 
-		ToggleButton tubeToggle = (ToggleButton) findViewById(R.id.tube_toggle);
-		tubeToggle.setChecked(true);
 		tubeToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 		    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 		        if (isChecked) {
@@ -357,6 +363,9 @@ public class MapActivity extends FragmentActivity implements OnMarkerClickListen
 					                                                 .icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.bike_icon)))
 													                 .title(jsonCurrentObject.getString("name"))
 													                 .snippet(jsonCurrentObject.getString("nbBikes") + "/" + jsonCurrentObject.getString("dbDocks") + " bikes available"));
+					if(!bikeToggle.isChecked()){
+						marker.setVisible(false);
+					}
 					bikeMarkerList.add(marker);
 					index++;
 				}
@@ -412,6 +421,9 @@ public class MapActivity extends FragmentActivity implements OnMarkerClickListen
 					Marker marker = map.addMarker(new MarkerOptions().position(new LatLng(jsonCurrentObject.getDouble("lat"), jsonCurrentObject.getDouble("long")))
 					                                           		 .icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.bus_icon))));
 					busList.put(marker, new BusStop(jsonCurrentObject.getString("stopName"), jsonCurrentObject.getString("stopCode")));
+					if(!busToggle.isChecked()){
+						marker.setVisible(false);
+					}
 					busMarkerList.add(marker);
 					index++;
 				}
