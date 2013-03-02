@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -35,15 +34,17 @@ import android.support.v4.app.FragmentActivity;
 import android.view.Window;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
-import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMap.OnCameraChangeListener;
 import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -51,7 +52,7 @@ import com.travelsmartlondon.station.Station;
 import com.travelsmartlondon.station.TubeStation;
 
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-public class MapActivity extends FragmentActivity implements OnMarkerClickListener{ 
+public class MapActivity extends FragmentActivity implements OnMarkerClickListener, OnCameraChangeListener{ 
     public static final String ID_CODE = "com.travelsmartlondon.ID_CODE";
     public static final String EXTRA_MESSAGE = "come.travelsmartlondon.EXTRA_MESSAGE";
     private static final int DIALOG_ALERT = 10;
@@ -65,8 +66,13 @@ public class MapActivity extends FragmentActivity implements OnMarkerClickListen
 	private Map<Marker, Station> tubeList = new HashMap<Marker, Station>();
 	private List<Marker> tubeMarkerList = new ArrayList<Marker>();
 	
-	private String latitude;
-	private String longitude;
+	private WeatherHttpGetAsyncTask weatherHttpGetAsyncTask = new WeatherHttpGetAsyncTask();
+	private BikeHttpGetAsyncTask bikeHttpGetAsyncTask = new BikeHttpGetAsyncTask();
+	private BusStopHttpGetAsyncTask busStopHttpGetAsyncTask = new BusStopHttpGetAsyncTask();
+
+	
+	private String _latitude;
+	private String _longitude;
 	
 	private String weatherDesc;
 	private String weatherIconUrl;
@@ -97,13 +103,13 @@ public class MapActivity extends FragmentActivity implements OnMarkerClickListen
 		map.getUiSettings().setCompassEnabled(false);
 		map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(51.523524,-0.132823), 15));
 		
-		latitude = "51.52395809999999";
-		longitude = "-0.1331019000000424";
+		_latitude = "51.52395809999999";
+		_longitude = "-0.1331019000000424";
 
-		weatherHttpRequest(latitude, longitude);
-		bikeHttpRequest(latitude, longitude);
-		busStopHttpRequest(latitude, longitude, RADIUS);
-
+		weatherHttpGetAsyncTask.execute(_latitude, _longitude);
+		bikeHttpGetAsyncTask.execute(_latitude, _longitude);
+		busStopHttpGetAsyncTask.execute(_latitude, _longitude, RADIUS);
+		
 
 		addMarker(goodgestation, map);
 		addMarker(warrenstation, map);
@@ -159,6 +165,7 @@ public class MapActivity extends FragmentActivity implements OnMarkerClickListen
 		});
 
 		map.setOnMarkerClickListener(this);
+		map.setOnCameraChangeListener(this);
 	}
 	
 //    @Override
@@ -166,6 +173,24 @@ public class MapActivity extends FragmentActivity implements OnMarkerClickListen
 //        mCameraTextView.setText(position.toString());
 //    }
 
+    public void onCameraChange(final CameraPosition position) {
+    	double latitude = position.target.latitude;
+    	double longitude = position.target.longitude;
+    	_latitude = Double.toString(latitude);
+    	_longitude = Double.toString(longitude);
+    	if(!(bikeHttpGetAsyncTask.getStatus() == AsyncTask.Status.FINISHED)){
+    		System.out.println("Pending Http Request Canceled");
+    		bikeHttpGetAsyncTask.cancel(true);
+    	}
+    	if(!(busStopHttpGetAsyncTask.getStatus() == AsyncTask.Status.FINISHED)){
+    		busStopHttpGetAsyncTask.cancel(true);
+    	}
+    	bikeHttpGetAsyncTask = new BikeHttpGetAsyncTask();
+    	bikeHttpGetAsyncTask.execute(_latitude, _longitude);
+		busStopHttpGetAsyncTask = new BusStopHttpGetAsyncTask();
+		busStopHttpGetAsyncTask.execute(_latitude, _longitude, RADIUS);
+    }
+    
 	@Override
 	public boolean onMarkerClick(Marker marker) {
 		if(busList.containsKey(marker)){
@@ -228,15 +253,6 @@ public class MapActivity extends FragmentActivity implements OnMarkerClickListen
 		return tempMarker;
 	}
 	
-	/*
-	void showDialog(){
-        android.app.FragmentManager fm = getFragmentManager();
-        TubeChoiceFragment tubeChoiceDialog = new TubeChoiceFragment();
-        tubeChoiceDialog.show(fm, "fragment_edit_name");
-	}
-
- 	*/
-	
 	private void addMarker(Station station, GoogleMap map){
 		if(station.getClass() == TubeStation.class){
 			Marker marker = map.addMarker(new MarkerOptions().position(station.getCoordinates()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET)));
@@ -246,177 +262,164 @@ public class MapActivity extends FragmentActivity implements OnMarkerClickListen
 	}
 
 
-	private void weatherHttpRequest(String latitude_, String longitude_) {
-		class HttpGetAsyncTask extends AsyncTask<String, Void, String>{
+	
+	class WeatherHttpGetAsyncTask extends AsyncTask<String, Void, String>{
+		@Override
+		protected String doInBackground(String... params) {
+			HttpClient httpClient = new DefaultHttpClient();
+
+			HttpGet httpGet = new HttpGet("http://stud-tfl.cs.ucl.ac.uk/weather?loc=" + params[0] +"," + params[1]);
 			
-			@Override
-			protected String doInBackground(String... params) {
-				HttpClient httpClient = new DefaultHttpClient();
-
-				HttpGet httpGet = new HttpGet("http://stud-tfl.cs.ucl.ac.uk/weather?loc=" + params[0] +"," + params[1]);
+			try {
+				HttpResponse httpResponse = httpClient.execute(httpGet);
 				
-				try {
-					HttpResponse httpResponse = httpClient.execute(httpGet);
-					
-					BufferedReader reader = new BufferedReader(new InputStreamReader(httpResponse.getEntity().getContent(), "UTF-8"));
-				    String json = reader.readLine();
-				    JSONObject jsonObject = new JSONObject(json);
-				    
-				    weatherDesc = jsonObject.getString("WeatherDesc");
-				    System.out.println(weatherDesc);
-				    weatherIconUrl = jsonObject.getString("IconURL");
-				    System.out.println(weatherIconUrl);
+				BufferedReader reader = new BufferedReader(new InputStreamReader(httpResponse.getEntity().getContent(), "UTF-8"));
+			    String json = reader.readLine();
+			    JSONObject jsonObject = new JSONObject(json);
+			    
+			    weatherDesc = jsonObject.getString("WeatherDesc");
+			    System.out.println(weatherDesc);
+			    weatherIconUrl = jsonObject.getString("IconURL");
+			    System.out.println(weatherIconUrl);
 
-				        InputStream is = (InputStream) new URL(weatherIconUrl).getContent();
-				        weatherIcon = Drawable.createFromStream(is, "src name");
-				    
-					//Error handler ******* to be completed in more detail
-				} catch (ClientProtocolException cpe) {
-					System.out.println("Client Protocol Exception :" + cpe);
-					cpe.printStackTrace();
-				} catch (IOException ioe) {
-					System.out.println("IOException :" + ioe);
-					ioe.printStackTrace();
-				} catch (NullPointerException npe) {
-					System.out.println(" Null Pointer Exception :" + npe);
-					npe.printStackTrace();
-				} catch (JSONException jsone) {
-					//Toast.makeText(getApplicationContext(), "Unable to retrieve data", Toast.LENGTH_LONG).show();
-					System.out.println("JSON Exception :" + jsone);
-					jsone.printStackTrace();
-				}
-				return null;
+			        InputStream is = (InputStream) new URL(weatherIconUrl).getContent();
+			        weatherIcon = Drawable.createFromStream(is, "src name");
+			    
+				//Error handler ******* to be completed in more detail
+			} catch (ClientProtocolException cpe) {
+				System.out.println("Client Protocol Exception :" + cpe);
+				cpe.printStackTrace();
+			} catch (IOException ioe) {
+				System.out.println("IOException :" + ioe);
+				ioe.printStackTrace();
+			} catch (NullPointerException npe) {
+				System.out.println(" Null Pointer Exception :" + npe);
+				npe.printStackTrace();
+			} catch (JSONException jsone) {
+				System.out.println("JSON Exception :" + jsone);
+				jsone.printStackTrace();
 			}
+			return null;
+		}
 
-			@Override
-			protected void onPostExecute(String result) {
-//				TextView weatherDescTextView = (TextView) findViewById(R.id.weather_desc);
-//				weatherDescTextView.setText(weatherDesc);
+		@Override
+		protected void onPostExecute(String result) {
+//			TextView weatherDescTextView = (TextView) findViewById(R.id.weather_desc);
+//			weatherDescTextView.setText(weatherDesc);
 
-				ImageView weatherIconImageView = (ImageView) findViewById(R.id.weather_icon);
-				weatherIconImageView.setImageDrawable(weatherIcon);
+			ImageView weatherIconImageView = (ImageView) findViewById(R.id.weather_icon);
+			weatherIconImageView.setImageDrawable(weatherIcon);
 
+			
+		}
+	}
+	
+	class BikeHttpGetAsyncTask extends AsyncTask<String, Void, String>{
+		@Override
+		protected String doInBackground(String... params) {
+			HttpClient httpClient = new DefaultHttpClient();
+			HttpGet httpGet = new HttpGet("http://stud-tfl.cs.ucl.ac.uk/bike?getAtCoordinates,lat=" + params[0] + "&long=" + params[1]);
+			
+			try {
+				HttpResponse httpResponse = httpClient.execute(httpGet);
 				
+				BufferedReader reader = new BufferedReader(new InputStreamReader(httpResponse.getEntity().getContent(), "UTF-8"));
+			    String json = reader.readLine();
+			    jsonBikeArray = new JSONArray(json);
+			    			    
+				//Error handler ******* to be completed in more detail
+			} catch (ClientProtocolException cpe) {
+				System.out.println("Client Protocol Exception :" + cpe);
+				cpe.printStackTrace();
+			} catch (IOException ioe) {
+				System.out.println("IOException :" + ioe);
+				ioe.printStackTrace();
+			} catch (NullPointerException npe) {
+				System.out.println(" Null Pointer Exception :" + npe);
+				npe.printStackTrace();
+			} catch (JSONException jsone) {
+				System.out.println("JSON Exception :" + jsone);
+				jsone.printStackTrace();
+			}
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(String result) {
+        	for(Marker marker: bikeMarkerList){
+        		marker.remove();
+        	}
+			try {
+				int index = 0;
+				while(!jsonBikeArray.isNull(index)){
+					JSONObject jsonCurrentObject = jsonBikeArray.getJSONObject(index);
+					Marker marker = map.addMarker(new MarkerOptions().position(new LatLng(jsonCurrentObject.getDouble("lat"), jsonCurrentObject.getDouble("long")))
+					                                                 .icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.bike_icon)))
+													                 .title(jsonCurrentObject.getString("name"))
+													                 .snippet(jsonCurrentObject.getString("nbBikes") + "/" + jsonCurrentObject.getString("dbDocks") + " bikes available"));
+					bikeMarkerList.add(marker);
+					index++;
+				}
+			} catch (JSONException e) {
+				System.out.println("Error in the JSON parsing");
+				e.printStackTrace();
 			}
 		}
-		HttpGetAsyncTask httpGetAsyncTask = new HttpGetAsyncTask();
-		httpGetAsyncTask.execute(latitude_, longitude_);
+	
 	}
 
-	private void bikeHttpRequest(String latitude_, String longitude_) {
-		class HttpGetAsyncTask extends AsyncTask<String, Void, String>{
-			@Override
-			protected String doInBackground(String... params) {
-				HttpClient httpClient = new DefaultHttpClient();
+	class BusStopHttpGetAsyncTask extends AsyncTask<String, Void, String>{
+		@Override
+		protected String doInBackground(String... params) {
+			HttpClient httpClient = new DefaultHttpClient();
 
-				HttpGet httpGet = new HttpGet("http://stud-tfl.cs.ucl.ac.uk/bike?getAtCoordinates,lat=" + params[0] + "&long=" + params[1]);
+			HttpGet httpGet = new HttpGet("http://stud-tfl.cs.ucl.ac.uk/stops?rad=" + params[0] + "," + params[1] + "," + params[2]);
+			
+			try {
+				HttpResponse httpResponse = httpClient.execute(httpGet);
 				
-				try {
-					HttpResponse httpResponse = httpClient.execute(httpGet);
-					
-					BufferedReader reader = new BufferedReader(new InputStreamReader(httpResponse.getEntity().getContent(), "UTF-8"));
-				    String json = reader.readLine();
-				    jsonBikeArray = new JSONArray(json);
-				    
-				    System.out.println(jsonBikeArray.get(0).toString());
-				    
-					//Error handler ******* to be completed in more detail
-				} catch (ClientProtocolException cpe) {
-					System.out.println("Client Protocol Exception :" + cpe);
-					cpe.printStackTrace();
-				} catch (IOException ioe) {
-					System.out.println("IOException :" + ioe);
-					ioe.printStackTrace();
-				} catch (NullPointerException npe) {
-					System.out.println(" Null Pointer Exception :" + npe);
-					npe.printStackTrace();
-				} catch (JSONException jsone) {
-					//Toast.makeText(getApplicationContext(), "Unable to retrieve data", Toast.LENGTH_LONG).show();
-					System.out.println("JSON Exception :" + jsone);
-					jsone.printStackTrace();
-				}
-				return null;
+				BufferedReader reader = new BufferedReader(new InputStreamReader(httpResponse.getEntity().getContent(), "UTF-8"));
+			    String json = reader.readLine();
+			    JSONObject jsonObject = new JSONObject(json);
+			    jsonBusStopArray = jsonObject.getJSONArray("stations");
+			    
+				//Error handler ******* to be completed in more detail
+			} catch (ClientProtocolException cpe) {
+				System.out.println("Client Protocol Exception :" + cpe);
+				cpe.printStackTrace();
+			} catch (IOException ioe) {
+				System.out.println("IOException :" + ioe);
+				ioe.printStackTrace();
+			} catch (NullPointerException npe) {
+				System.out.println(" Null Pointer Exception :" + npe);
+				npe.printStackTrace();
+			} catch (JSONException jsone) {
+				System.out.println("JSON Exception :" + jsone);
+				jsone.printStackTrace();
 			}
+			return null;
+		}
 
-			@Override
-			protected void onPostExecute(String result) {
-				
-				try {
-					int index = 0;
-					while(!jsonBikeArray.isNull(index)){
-						JSONObject jsonCurrentObject = jsonBikeArray.getJSONObject(index);
-						Marker marker = map.addMarker(new MarkerOptions().position(new LatLng(jsonCurrentObject.getDouble("lat"), jsonCurrentObject.getDouble("long")))
-						                                                 .icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.bike_icon)))
-														                 .title(jsonCurrentObject.getString("name"))
-														                 .snippet(jsonCurrentObject.getString("nbBikes") + "/" + jsonCurrentObject.getString("dbDocks") + " bikes available"));
-						bikeMarkerList.add(marker);
-						index++;
-					}
-				} catch (JSONException e) {
-					System.out.println("Error in the JSON parsing");
-					e.printStackTrace();
+		@Override
+		protected void onPostExecute(String result) {
+        	for(Marker marker: busMarkerList){
+        		marker.remove();
+        	}
+			try {
+				int index = 0;
+				while(!jsonBusStopArray.isNull(index)){
+					JSONObject jsonCurrentObject = jsonBusStopArray.getJSONObject(index);
+					Marker marker = map.addMarker(new MarkerOptions().position(new LatLng(jsonCurrentObject.getDouble("lat"), jsonCurrentObject.getDouble("long")))
+					                                           		 .icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.bus_icon))));
+					busList.put(marker, new BusStop(jsonCurrentObject.getString("stopName"), jsonCurrentObject.getString("stopCode")));
+					busMarkerList.add(marker);
+					index++;
 				}
+			} catch (JSONException e) {
+				System.out.println("Error in the JSON parsing");
+				e.printStackTrace();
 			}
 		}
-		HttpGetAsyncTask httpGetAsyncTask = new HttpGetAsyncTask();
-		httpGetAsyncTask.execute(latitude_, longitude_);
-	}
-
-	private void busStopHttpRequest(String latitude_, String longitude_, String radius_) {
-		class HttpGetAsyncTask extends AsyncTask<String, Void, String>{
-			@Override
-			protected String doInBackground(String... params) {
-				HttpClient httpClient = new DefaultHttpClient();
-
-				HttpGet httpGet = new HttpGet("http://stud-tfl.cs.ucl.ac.uk/stops?rad=" + params[0] + "," + params[1] + "," + params[2]);
-				
-				try {
-					HttpResponse httpResponse = httpClient.execute(httpGet);
-					
-					BufferedReader reader = new BufferedReader(new InputStreamReader(httpResponse.getEntity().getContent(), "UTF-8"));
-				    String json = reader.readLine();
-				    JSONObject jsonObject = new JSONObject(json);
-				    jsonBusStopArray = jsonObject.getJSONArray("stations");
-				    
-					//Error handler ******* to be completed in more detail
-				} catch (ClientProtocolException cpe) {
-					System.out.println("Client Protocol Exception :" + cpe);
-					cpe.printStackTrace();
-				} catch (IOException ioe) {
-					System.out.println("IOException :" + ioe);
-					ioe.printStackTrace();
-				} catch (NullPointerException npe) {
-					System.out.println(" Null Pointer Exception :" + npe);
-					npe.printStackTrace();
-				} catch (JSONException jsone) {
-					//Toast.makeText(getApplicationContext(), "Unable to retrieve data", Toast.LENGTH_LONG).show();
-					System.out.println("JSON Exception :" + jsone);
-					jsone.printStackTrace();
-				}
-				return null;
-			}
-
-			@Override
-			protected void onPostExecute(String result) {
-				
-				try {
-					int index = 0;
-					while(!jsonBusStopArray.isNull(index)){
-						JSONObject jsonCurrentObject = jsonBusStopArray.getJSONObject(index);
-						Marker marker = map.addMarker(new MarkerOptions().position(new LatLng(jsonCurrentObject.getDouble("lat"), jsonCurrentObject.getDouble("long")))
-						                                           		 .icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.bus_icon))));
-						busList.put(marker, new BusStop(jsonCurrentObject.getString("stopName"), jsonCurrentObject.getString("stopCode")));
-						busMarkerList.add(marker);
-						index++;
-					}
-				} catch (JSONException e) {
-					System.out.println("Error in the JSON parsing");
-					e.printStackTrace();
-				}
-			}
-		}
-		HttpGetAsyncTask httpGetAsyncTask = new HttpGetAsyncTask();
-		httpGetAsyncTask.execute(latitude_, longitude_, radius_);
 	}
 	
 	class BusStop{
@@ -433,9 +436,5 @@ public class MapActivity extends FragmentActivity implements OnMarkerClickListen
 		public String getCode() {
 			return this._code;
 		}
-
-		//TFL provides the bus stop coordinates in UK OSGB eastings and northings format. this method converts it into LatLng
-
-		
 	}
 }
