@@ -22,10 +22,10 @@
             android:id="@+id/bus_toggle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textOn="Bus"
-            android:textOff="Bus"
             android:layout_weight="1"
-            android:text="ToggleButton" />
+            android:alpha="0.90"
+            android:textOff="Bus"
+            android:textOn="Bus" />
 
         <ToggleButton
             android:id="@+id/tube_toggle"
@@ -33,6 +33,7 @@
             android:layout_height="wrap_content"
             android:textOn="Tube"
             android:textOff="Tube"
+            android:alpha="0.90"
             android:layout_weight="1"
             android:text="ToggleButton" />
 
@@ -42,6 +43,7 @@
             android:layout_height="wrap_content"
             android:textOn="Bike"
             android:textOff="Bike"
+            android:alpha="0.90"
             android:layout_weight="1"
             android:text="ToggleButton" />
     </LinearLayout>

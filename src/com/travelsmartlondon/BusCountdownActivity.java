@@ -16,6 +16,7 @@ import org.json.JSONObject;
 
 import android.app.ListActivity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
@@ -47,6 +48,7 @@ public class BusCountdownActivity extends ListActivity{
 					        			  new int[] {R.id.text1,R.id.text2, R.id.text3});
 
 		this._closeButton = (Button) findViewById(R.id.close_button);
+		this._closeButton.setBackgroundColor(Color.DKGRAY);
 		this._closeButton.setOnClickListener(
 				new OnClickListener() {
 					@Override

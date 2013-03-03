@@ -28,6 +28,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationListener;
@@ -132,11 +133,9 @@ public class MapActivity extends FragmentActivity implements OnMarkerClickListen
 
 		boolean enabledGPS = _locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
 
-		if(enabledGPS)
-		{
+		if(enabledGPS){
 			_provider = LocationManager.GPS_PROVIDER;
-		}
-		else{
+		}else{
 			_provider = LocationManager.NETWORK_PROVIDER;
 		}
 
@@ -145,80 +144,83 @@ public class MapActivity extends FragmentActivity implements OnMarkerClickListen
 		}
 		else{
 			_currentLocation = getCurrentLocation();
+		}
 
 		_latitude = Double.toString(_currentLocation.getLatitude());
 		_longitude = Double.toString(_currentLocation.getLongitude());
 
-			weatherHttpGetAsyncTask.execute(_latitude, _longitude);
-			bikeHttpGetAsyncTask.execute(_latitude, _longitude);
-			busStopHttpGetAsyncTask.execute(_latitude, _longitude, RADIUS);
-			//tubeGetAsyncTask.execute(_latitude,_longitude);
-			
+		weatherHttpGetAsyncTask.execute(_latitude, _longitude);
 
-			map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(_currentLocation.getLatitude()
-					,_currentLocation.getLongitude()), 15));
+		map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(_currentLocation.getLatitude(),_currentLocation.getLongitude()), 15));
 
 
-			addMarker(goodgestation, map);
-			addMarker(warrenstation, map);
-			addMarker(eustonstation, map);
-			addMarker(tcrstation, map);
+		addMarker(goodgestation, map);
+		addMarker(warrenstation, map);
+		addMarker(eustonstation, map);
+		addMarker(tcrstation, map);
 
 
-			busToggle = (ToggleButton) findViewById(R.id.bus_toggle);
-			busToggle.setChecked(true);
-			bikeToggle = (ToggleButton) findViewById(R.id.bike_toggle);
-			bikeToggle.setChecked(true);
-			tubeToggle = (ToggleButton) findViewById(R.id.tube_toggle);
-			tubeToggle.setChecked(true);
+		busToggle = (ToggleButton) findViewById(R.id.bus_toggle);
+		busToggle.setChecked(true);
+		busToggle.setBackgroundColor(Color.WHITE);
+		bikeToggle = (ToggleButton) findViewById(R.id.bike_toggle);
+		bikeToggle.setChecked(true);
+		bikeToggle.setBackgroundColor(Color.WHITE);
+		tubeToggle = (ToggleButton) findViewById(R.id.tube_toggle);
+		tubeToggle.setChecked(true);
+		tubeToggle.setBackgroundColor(Color.WHITE);
 
-			busToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-				public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-					if (isChecked) {
-						for(Marker marker: busMarkerList){
-							marker.setVisible(true);
-						}
-					} else {
-						for(Marker marker: busMarkerList){
-							marker.setVisible(false);
-						}
+		busToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				if (isChecked) {
+					for(Marker marker: busMarkerList){
+						marker.setVisible(true);
+					}
+					buttonView.setAlpha((float) 0.9);
+				} else {
+					buttonView.setAlpha((float) 0.4);
+					for(Marker marker: busMarkerList){
+						marker.setVisible(false);
 					}
 				}
-			});
+			}
+		});
 
-			bikeToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-				public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-					if (isChecked) {
-						for(Marker marker: bikeMarkerList){
-							marker.setVisible(true);
-						}
-					} else {
-						for(Marker marker: bikeMarkerList){
-							marker.setVisible(false);
-						}
+		bikeToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				if (isChecked) {
+					for(Marker marker: bikeMarkerList){
+						marker.setVisible(true);
 					}
-				}
-			});
-
-			tubeToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-				public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-					if (isChecked) {
-						for(Marker marker: tubeMarkerList){
-							marker.setVisible(true);
-						}
-					} else {
-						for(Marker marker: tubeMarkerList){
-							marker.setVisible(false);
-						}
+					buttonView.setAlpha((float) 0.9);
+				} else {
+					for(Marker marker: bikeMarkerList){
+						marker.setVisible(false);
 					}
+					buttonView.setAlpha((float) 0.4);
 				}
-			});
+			}
+		});
 
-			map.setOnMarkerClickListener(this);
-			map.setOnCameraChangeListener(this);
-		}
+		tubeToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				if (isChecked) {
+					for(Marker marker: tubeMarkerList){
+						marker.setVisible(true);
+					}
+					buttonView.setAlpha((float) 0.9);
+				} else {
+					for(Marker marker: tubeMarkerList){
+						marker.setVisible(false);
+					}
+					buttonView.setAlpha((float) 0.4);
+				}
+			}
+		});
+
+		map.setOnMarkerClickListener(this);
+		map.setOnCameraChangeListener(this);
 	}
-
 
 	public void onCameraChange(final CameraPosition position) {
 		double latitude = position.target.latitude;
@@ -396,7 +398,7 @@ public class MapActivity extends FragmentActivity implements OnMarkerClickListen
 			tubeMarkerList.add(marker);
 		}
 	}
-	
+
 	class WeatherHttpGetAsyncTask extends AsyncTask<String, Void, String>{
 		@Override
 		protected String doInBackground(String... params) {
@@ -461,7 +463,7 @@ public class MapActivity extends FragmentActivity implements OnMarkerClickListen
 				BufferedReader reader = new BufferedReader(new InputStreamReader(httpResponse.getEntity().getContent(), "UTF-8"));
 				String json = reader.readLine();
 				jsonBusStopArray = new JSONArray(json);
-				
+
 				//Error handler ******* to be completed in more detail
 			} catch (ClientProtocolException cpe) {
 				System.out.println("Client Protocol Exception :" + cpe);
@@ -478,7 +480,7 @@ public class MapActivity extends FragmentActivity implements OnMarkerClickListen
 			}
 			return null;
 		}
-		
+
 		@Override
 		protected void onPostExecute(String result) {
 			for(Marker marker: busMarkerList){
@@ -506,7 +508,7 @@ public class MapActivity extends FragmentActivity implements OnMarkerClickListen
 			}
 		}
 	}
-	
+
 	class BikeHttpGetAsyncTask extends AsyncTask<String, Void, String>{
 		@Override
 		protected String doInBackground(String... params) {
@@ -518,7 +520,7 @@ public class MapActivity extends FragmentActivity implements OnMarkerClickListen
 				BufferedReader reader = new BufferedReader(new InputStreamReader(httpResponse.getEntity().getContent(), "UTF-8"));
 				String json = reader.readLine();
 				jsonBikeArray = new JSONArray(json);
-				
+
 				//Error handler ******* to be completed in more detail
 			} catch (ClientProtocolException cpe) {
 				System.out.println("Client Protocol Exception :" + cpe);
@@ -535,7 +537,7 @@ public class MapActivity extends FragmentActivity implements OnMarkerClickListen
 			}
 			return null;
 		}
-		
+
 		@Override
 		protected void onPostExecute(String result) {
 			for(Marker marker: bikeMarkerList){
@@ -564,30 +566,30 @@ public class MapActivity extends FragmentActivity implements OnMarkerClickListen
 			}
 		}
 	}
-	
+
 	/*class QueryTubeStationAsyncTask extends AsyncTask<String, Void, String>{
 
 		@Override
 		protected String doInBackground(String... params) {
-			
+
 			Point currentLocation = new Point(Double.parseDouble(params[0]), Double.parseDouble(params[1]));
 			int mapArea = DatabaseClassificator.getInstance().checkTubeStationMapArea(currentLocation);
-			
+
 			StationDAO stationDao = new StationDAO(MapActivity.this);
 			stationDao.open();
 			List<Station> stationsInArea = stationDao.getStationsByArea(mapArea);
 			stationDao.close();
-			
+
 			return null;
-			
+
 		}
-		
+
 		@Override
 		protected void onPostExecute(String result) {
 		}
-		
+
 	}*/
-	
+
 
 	class BusStop{
 		private String _name;
