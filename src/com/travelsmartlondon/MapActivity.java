@@ -217,7 +217,6 @@ public class MapActivity extends FragmentActivity implements OnMarkerClickListen
 				}
 			}
 		});
-
 		map.setOnMarkerClickListener(this);
 		map.setOnCameraChangeListener(this);
 	}
@@ -393,7 +392,7 @@ public class MapActivity extends FragmentActivity implements OnMarkerClickListen
 
 	private void addMarker(Station station, GoogleMap map){
 		if(station.getClass() == TubeStation.class){
-			Marker marker = map.addMarker(new MarkerOptions().position(station.getCoordinates()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET)));
+			Marker marker = map.addMarker(new MarkerOptions().position(station.getCoordinates()).icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.tube_icon))));
 			tubeList.put(marker,station);
 			tubeMarkerList.add(marker);
 		}

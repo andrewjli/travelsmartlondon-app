@@ -24,41 +24,27 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:alpha="0.90"
-            android:textOff="Bus"
-            android:textOn="Bus" />
+            android:textSize="0sp"
+            android:drawableBottom="@drawable/bus_icon_large"/>
 
         <ToggleButton
             android:id="@+id/tube_toggle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textOn="Tube"
-            android:textOff="Tube"
             android:alpha="0.90"
             android:layout_weight="1"
-            android:text="ToggleButton" />
+            android:textSize="0sp"
+            android:drawableBottom="@drawable/tube_icon_large"/>
 
         <ToggleButton
             android:id="@+id/bike_toggle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textOn="Bike"
-            android:textOff="Bike"
             android:alpha="0.90"
             android:layout_weight="1"
-            android:text="ToggleButton" />
+            android:textSize="0sp"
+            android:drawableBottom="@drawable/bike_icon_large"/>
     </LinearLayout>
-
-    <TextView
-        android:id="@+id/weather_desc"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="14dp"
-        android:layout_marginLeft="14dp"
-        android:text="" 
-        android:textSize="20sp"
-        android:textColor="#000000"/>
 
     <ImageView
         android:id="@+id/weather_icon"
