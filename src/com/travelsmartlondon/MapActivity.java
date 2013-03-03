@@ -146,7 +146,7 @@ public class MapActivity extends FragmentActivity implements OnMarkerClickListen
 		_longitude = Double.toString(_currentLocation.getLongitude());
 
 		weatherHttpGetAsyncTask.execute(_latitude, _longitude);
-		bikeHttpGetAsyncTask.execute(_latitude, _longitude);
+//		bikeHttpGetAsyncTask.execute(_latitude, _longitude, RADIUS);
 		busStopHttpGetAsyncTask.execute(_latitude, _longitude, RADIUS);
 
 		map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(_currentLocation.getLatitude()
@@ -213,10 +213,6 @@ public class MapActivity extends FragmentActivity implements OnMarkerClickListen
 		}
 	}
 
-	//    @Override
-	//    public void onCameraChange(final CameraPosition position) {
-	//        mCameraTextView.setText(position.toString());
-	//    }
 
 	public void onCameraChange(final CameraPosition position) {
 		double latitude = position.target.latitude;
@@ -231,7 +227,7 @@ public class MapActivity extends FragmentActivity implements OnMarkerClickListen
 			busStopHttpGetAsyncTask.cancel(true);
 		}
 		bikeHttpGetAsyncTask = new BikeHttpGetAsyncTask();
-		bikeHttpGetAsyncTask.execute(_latitude, _longitude);
+		bikeHttpGetAsyncTask.execute(_latitude, _longitude, RADIUS);
 		busStopHttpGetAsyncTask = new BusStopHttpGetAsyncTask();
 		busStopHttpGetAsyncTask.execute(_latitude, _longitude, RADIUS);
 	}
@@ -448,19 +444,20 @@ public class MapActivity extends FragmentActivity implements OnMarkerClickListen
 		}
 	}
 
-	class BikeHttpGetAsyncTask extends AsyncTask<String, Void, String>{
+	class BusStopHttpGetAsyncTask extends AsyncTask<String, Void, String>{
 		@Override
 		protected String doInBackground(String... params) {
 			HttpClient httpClient = new DefaultHttpClient();
-			HttpGet httpGet = new HttpGet("http://stud-tfl.cs.ucl.ac.uk/bike?getAtCoordinates,lat=" + params[0] + "&long=" + params[1]);
+
+			HttpGet httpGet = new HttpGet("http://stud-tfl.cs.ucl.ac.uk/stops?loc=" + params[0] + "," + params[1] + "," + params[2]);
 
 			try {
 				HttpResponse httpResponse = httpClient.execute(httpGet);
 
 				BufferedReader reader = new BufferedReader(new InputStreamReader(httpResponse.getEntity().getContent(), "UTF-8"));
 				String json = reader.readLine();
-				jsonBikeArray = new JSONArray(json);
-
+				jsonBusStopArray = new JSONArray(json);
+				
 				//Error handler ******* to be completed in more detail
 			} catch (ClientProtocolException cpe) {
 				System.out.println("Client Protocol Exception :" + cpe);
@@ -477,7 +474,64 @@ public class MapActivity extends FragmentActivity implements OnMarkerClickListen
 			}
 			return null;
 		}
+		
+		@Override
+		protected void onPostExecute(String result) {
+			for(Marker marker: busMarkerList){
+				marker.remove();
+			}
+			try {
+				int index = 0;
+				while(!jsonBusStopArray.isNull(index)){
+					JSONObject jsonCurrentObject = jsonBusStopArray.getJSONObject(index);
+					Marker marker = map.addMarker(new MarkerOptions().position(new LatLng(jsonCurrentObject.getDouble("lat"), jsonCurrentObject.getDouble("long")))
+							.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.bus_icon))));
+					busList.put(marker, new BusStop(jsonCurrentObject.getString("stopName"), jsonCurrentObject.getString("stopCode")));
+					if(!busToggle.isChecked()){
+						marker.setVisible(false);
+					}
+					busMarkerList.add(marker);
+					index++;
+				}
+			} catch (NullPointerException npe) {
+				System.out.println(" Null Pointer Exception :" + npe);
+				npe.printStackTrace();
+			} catch (JSONException jsone) {
+				System.out.println("JSON Exception :" + jsone);
+				jsone.printStackTrace();
+			}
+		}
+	}
+	
+	class BikeHttpGetAsyncTask extends AsyncTask<String, Void, String>{
+		@Override
+		protected String doInBackground(String... params) {
+			HttpClient httpClient = new DefaultHttpClient();
+			HttpGet httpGet = new HttpGet("http://stud-tfl.cs.ucl.ac.uk/bike?loc=" + params[0] + "," + params[1] + "," + params[2]);
 
+			try {
+				HttpResponse httpResponse = httpClient.execute(httpGet);
+				BufferedReader reader = new BufferedReader(new InputStreamReader(httpResponse.getEntity().getContent(), "UTF-8"));
+				String json = reader.readLine();
+				jsonBikeArray = new JSONArray(json);
+				
+				//Error handler ******* to be completed in more detail
+			} catch (ClientProtocolException cpe) {
+				System.out.println("Client Protocol Exception :" + cpe);
+				cpe.printStackTrace();
+			} catch (IOException ioe) {
+				System.out.println("IOException :" + ioe);
+				ioe.printStackTrace();
+			} catch (NullPointerException npe) {
+				System.out.println(" Null Pointer Exception :" + npe);
+				npe.printStackTrace();
+			} catch (JSONException jsone) {
+				System.out.println("JSON Exception :" + jsone);
+				jsone.printStackTrace();
+			}
+			return null;
+		}
+		
 		@Override
 		protected void onPostExecute(String result) {
 			for(Marker marker: bikeMarkerList){
@@ -497,67 +551,12 @@ public class MapActivity extends FragmentActivity implements OnMarkerClickListen
 					bikeMarkerList.add(marker);
 					index++;
 				}
-			} catch (JSONException e) {
-				System.out.println("Error in the JSON parsing");
-				e.printStackTrace();
-			}
-		}
-
-	}
-
-	class BusStopHttpGetAsyncTask extends AsyncTask<String, Void, String>{
-		@Override
-		protected String doInBackground(String... params) {
-			HttpClient httpClient = new DefaultHttpClient();
-
-			HttpGet httpGet = new HttpGet("http://stud-tfl.cs.ucl.ac.uk/stops?rad=" + params[0] + "," + params[1] + "," + params[2]);
-
-			try {
-				HttpResponse httpResponse = httpClient.execute(httpGet);
-
-				BufferedReader reader = new BufferedReader(new InputStreamReader(httpResponse.getEntity().getContent(), "UTF-8"));
-				String json = reader.readLine();
-				JSONObject jsonObject = new JSONObject(json);
-				jsonBusStopArray = jsonObject.getJSONArray("stations");
-
-				//Error handler ******* to be completed in more detail
-			} catch (ClientProtocolException cpe) {
-				System.out.println("Client Protocol Exception :" + cpe);
-				cpe.printStackTrace();
-			} catch (IOException ioe) {
-				System.out.println("IOException :" + ioe);
-				ioe.printStackTrace();
 			} catch (NullPointerException npe) {
 				System.out.println(" Null Pointer Exception :" + npe);
 				npe.printStackTrace();
 			} catch (JSONException jsone) {
 				System.out.println("JSON Exception :" + jsone);
 				jsone.printStackTrace();
-			}
-			return null;
-		}
-
-		@Override
-		protected void onPostExecute(String result) {
-			for(Marker marker: busMarkerList){
-				marker.remove();
-			}
-			try {
-				int index = 0;
-				while(!jsonBusStopArray.isNull(index)){
-					JSONObject jsonCurrentObject = jsonBusStopArray.getJSONObject(index);
-					Marker marker = map.addMarker(new MarkerOptions().position(new LatLng(jsonCurrentObject.getDouble("lat"), jsonCurrentObject.getDouble("long")))
-							.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.bus_icon))));
-					busList.put(marker, new BusStop(jsonCurrentObject.getString("stopName"), jsonCurrentObject.getString("stopCode")));
-					if(!busToggle.isChecked()){
-						marker.setVisible(false);
-					}
-					busMarkerList.add(marker);
-					index++;
-				}
-			} catch (JSONException e) {
-				System.out.println("Error in the JSON parsing");
-				e.printStackTrace();
 			}
 		}
 	}
