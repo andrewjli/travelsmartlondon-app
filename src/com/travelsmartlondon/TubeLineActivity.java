@@ -265,6 +265,9 @@ public class TubeLineActivity extends ListActivity {
 		public View getView(int position_, View convertView_, ViewGroup parent_) {
 			View view = super.getView(position_, convertView_, parent_);
 			
+			System.out.println("getView called at position: " + position_);
+			System.out.println("station at this position is: " + _positionLineMap.get(position_));
+			
 			View viewToClick;
 			if(_isLoggedIn) {
 				viewToClick = (TextView) view.findViewById(R.id.line_name_text);
@@ -305,43 +308,47 @@ public class TubeLineActivity extends ListActivity {
 				final LinearLayout ratingLayout = (LinearLayout) view.findViewById(R.id.rating_layout);
 				Button button = (Button) ratingLayout.findViewById(R.id.rate_button);
 				final int position = position_;
-				button.setOnClickListener(new View.OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						// 1. Instantiate an AlertDialog.Builder with its constructor
-						AlertDialog.Builder builder = new AlertDialog.Builder(TubeLineActivity.this);
-
-						// 2. Chain together various setter methods to set the dialog characteristics
-						builder.setMessage("Give rating and click RATE")
-						       .setTitle("Give your rating to " + line + " line");
-						LayoutInflater inflater = TubeLineActivity.this.getLayoutInflater();
-						
-						final LinearLayout localLayout = (LinearLayout) inflater.inflate(R.layout.give_rating_dialog, null);
-						final RatingBar rating = (RatingBar) localLayout.findViewById(R.id.rating);
-						
-						builder.setView(localLayout);
- 
-						builder.setPositiveButton("SUBMIT", new DialogInterface.OnClickListener() {
-					               @Override
-					               public void onClick(DialogInterface dialog, int id) {
-					            	   RatingBar resultRating = new RatingBar(TubeLineActivity.this, null, android.R.attr.ratingBarStyleIndicator);
-					            	   ratingLayout.removeAllViews();
-					            	   resultRating.setRating(rating.getRating());
-					            	   ratingLayout.addView(resultRating);
-					            	   _ratingBarWasDisplayedAtPosition.put(position,true);
-					                   dialog.dismiss();
-					               }
-					           })
-					           .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
-					               public void onClick(DialogInterface dialog, int id) {
-					                   dialog.dismiss();
-					               }
-					           });     
-						// 3. Get the AlertDialog from create()
-						AlertDialog dialog = builder.create();
-						dialog.show();
-					}
-				});
+				if(button != null) {
+					button.setOnClickListener(new View.OnClickListener() {
+						@Override
+						public void onClick(View v) {
+							// 1. Instantiate an AlertDialog.Builder with its constructor
+							AlertDialog.Builder builder = new AlertDialog.Builder(TubeLineActivity.this);
+	
+							// 2. Chain together various setter methods to set the dialog characteristics
+							builder.setMessage("Give rating and click RATE")
+							       .setTitle("Give your rating to " + line + " line");
+							LayoutInflater inflater = TubeLineActivity.this.getLayoutInflater();
+							
+							final LinearLayout localLayout = (LinearLayout) inflater.inflate(R.layout.give_rating_dialog, null);
+							final RatingBar rating = (RatingBar) localLayout.findViewById(R.id.rating);
+							
+							builder.setView(localLayout);
+	 
+							builder.setPositiveButton("SUBMIT", new DialogInterface.OnClickListener() {
+						               @Override
+						               public void onClick(DialogInterface dialog, int id) {
+						            	   RatingBar resultRating = new RatingBar(TubeLineActivity.this, null, android.R.attr.ratingBarStyleIndicator);
+						            	   ratingLayout.removeAllViews();
+						            	   resultRating.setRating(rating.getRating());
+						            	   ratingLayout.addView(resultRating);
+						            	   _ratingBarWasDisplayedAtPosition.put(position,true);
+						                   dialog.dismiss();
+						               }
+						           })
+						           .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+						               public void onClick(DialogInterface dialog, int id) {
+						                   dialog.dismiss();
+						               }
+						           });     
+							// 3. Get the AlertDialog from create()
+							AlertDialog dialog = builder.create();
+							dialog.show();
+						}
+					});
+				} else {
+					System.out.println(line + " line gives a NullPointerException");
+				}
 				
 			}
 			
