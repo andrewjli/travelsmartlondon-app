@@ -125,6 +125,7 @@ public class MapActivity extends FragmentActivity implements OnMarkerClickListen
 		map.setMyLocationEnabled(true);
 		map.getUiSettings().setZoomControlsEnabled(false);
 		map.getUiSettings().setCompassEnabled(false);
+		//map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(51.523524,-0.132823), 15));
 
 		_locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 		_isConnected = checkInternetConnection();
@@ -145,8 +146,8 @@ public class MapActivity extends FragmentActivity implements OnMarkerClickListen
 		else{
 			_currentLocation = getCurrentLocation();
 
-			_latitude = Double.toString(_currentLocation.getLatitude());
-			_longitude = Double.toString(_currentLocation.getLongitude());
+		_latitude = Double.toString(_currentLocation.getLatitude());
+		_longitude = Double.toString(_currentLocation.getLongitude());
 
 			weatherHttpGetAsyncTask.execute(_latitude, _longitude);
 			bikeHttpGetAsyncTask.execute(_latitude, _longitude);
