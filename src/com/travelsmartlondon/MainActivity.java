@@ -16,6 +16,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -29,6 +30,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.travelsmartlondon.context.TSLApplicationContext;
+import com.travelsmartlondon.database.DBSQLiteHelper;
 
 public class MainActivity extends Activity {
 
@@ -78,6 +80,16 @@ public class MainActivity extends Activity {
 				}
 			}
 	    });
+	    
+	   /* DBSQLiteHelper sqliteHelper = new DBSQLiteHelper(getApplicationContext());
+	    try{
+	    	sqliteHelper.createDataBase();
+	    }
+	    catch(IOException e)
+	    {
+	    	System.err.println("Database could not be created");
+	    }*/
+	    
 	}
 	
 	private void loginWithGoogleAccount(View view) {

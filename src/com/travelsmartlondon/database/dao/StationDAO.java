@@ -13,17 +13,23 @@ import com.travelsmartlondon.database.TubeStationsMapArea;
 import com.travelsmartlondon.station.Station;
 import com.travelsmartlondon.station.TubeStation;
 
-public class stationDAO {
+public class StationDAO {
 	
 	private SQLiteDatabase _tslDB;
 	private DBSQLiteHelper _dbHelper;
 	
-	public stationDAO(Context context){
+	public StationDAO(Context context){
 		_dbHelper = new DBSQLiteHelper(context);
 	}
 	
 	public void open() throws SQLException {
-	    _tslDB = _dbHelper.getWritableDatabase();
+		boolean dbAvailable = _dbHelper.openDataBase();
+	    if(dbAvailable){
+	    	_tslDB = _dbHelper.getReadableDatabase();
+	    }
+	    else{
+	    	System.out.println("********************Database does not exist***************");
+	    }
 	  }
 
 	public void close() {    

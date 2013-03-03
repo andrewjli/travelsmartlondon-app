@@ -1,11 +1,13 @@
 package com.travelsmartlondon.database;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
 import android.content.Context;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -42,6 +44,16 @@ public class DBSQLiteHelper extends SQLiteOpenHelper{
 		}
 
 	}
+	
+	//Open the database, so we can query it 
+    public boolean openDataBase() throws SQLException 
+    { 
+        String mPath = DB_PATH + DB_NAME; 
+        //Log.v("mPath", mPath); 
+        tslDatabase = SQLiteDatabase.openDatabase(mPath, null, SQLiteDatabase.CREATE_IF_NECESSARY); 
+        //mDataBase = SQLiteDatabase.openDatabase(mPath, null, SQLiteDatabase.NO_LOCALIZED_COLLATORS); 
+        return tslDatabase != null; 
+    } 
 	
 	//Check if the database already exists or not to avoid copying the database everytime the application opens.
 	private boolean checkDataBase() {

@@ -54,6 +54,9 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.travelsmartlondon.database.dao.StationDAO;
+import com.travelsmartlondon.help.DatabaseClassificator;
+import com.travelsmartlondon.help.Point;
 import com.travelsmartlondon.station.Station;
 import com.travelsmartlondon.station.TubeStation;
 
@@ -89,6 +92,7 @@ public class MapActivity extends FragmentActivity implements OnMarkerClickListen
 	private WeatherHttpGetAsyncTask weatherHttpGetAsyncTask = new WeatherHttpGetAsyncTask();
 	private BikeHttpGetAsyncTask bikeHttpGetAsyncTask = new BikeHttpGetAsyncTask();
 	private BusStopHttpGetAsyncTask busStopHttpGetAsyncTask = new BusStopHttpGetAsyncTask();
+	//private QueryTubeStationAsyncTask tubeGetAsyncTask = new QueryTubeStationAsyncTask();
 
 
 	private String _latitude;
@@ -142,74 +146,76 @@ public class MapActivity extends FragmentActivity implements OnMarkerClickListen
 		else{
 			_currentLocation = getCurrentLocation();
 
-		_latitude = Double.toString(_currentLocation.getLatitude());
-		_longitude = Double.toString(_currentLocation.getLongitude());
+			_latitude = Double.toString(_currentLocation.getLatitude());
+			_longitude = Double.toString(_currentLocation.getLongitude());
 
-		weatherHttpGetAsyncTask.execute(_latitude, _longitude);
-		bikeHttpGetAsyncTask.execute(_latitude, _longitude);
-		busStopHttpGetAsyncTask.execute(_latitude, _longitude, RADIUS);
+			weatherHttpGetAsyncTask.execute(_latitude, _longitude);
+			bikeHttpGetAsyncTask.execute(_latitude, _longitude);
+			busStopHttpGetAsyncTask.execute(_latitude, _longitude, RADIUS);
+			//tubeGetAsyncTask.execute(_latitude,_longitude);
+			
 
-		map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(_currentLocation.getLatitude()
-				,_currentLocation.getLongitude()), 15));
-
-
-		addMarker(goodgestation, map);
-		addMarker(warrenstation, map);
-		addMarker(eustonstation, map);
-		addMarker(tcrstation, map);
+			map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(_currentLocation.getLatitude()
+					,_currentLocation.getLongitude()), 15));
 
 
-		busToggle = (ToggleButton) findViewById(R.id.bus_toggle);
-		busToggle.setChecked(true);
-		bikeToggle = (ToggleButton) findViewById(R.id.bike_toggle);
-		bikeToggle.setChecked(true);
-		tubeToggle = (ToggleButton) findViewById(R.id.tube_toggle);
-		tubeToggle.setChecked(true);
+			addMarker(goodgestation, map);
+			addMarker(warrenstation, map);
+			addMarker(eustonstation, map);
+			addMarker(tcrstation, map);
 
-		busToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-				if (isChecked) {
-					for(Marker marker: busMarkerList){
-						marker.setVisible(true);
-					}
-				} else {
-					for(Marker marker: busMarkerList){
-						marker.setVisible(false);
-					}
-				}
-			}
-		});
 
-		bikeToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-				if (isChecked) {
-					for(Marker marker: bikeMarkerList){
-						marker.setVisible(true);
-					}
-				} else {
-					for(Marker marker: bikeMarkerList){
-						marker.setVisible(false);
+			busToggle = (ToggleButton) findViewById(R.id.bus_toggle);
+			busToggle.setChecked(true);
+			bikeToggle = (ToggleButton) findViewById(R.id.bike_toggle);
+			bikeToggle.setChecked(true);
+			tubeToggle = (ToggleButton) findViewById(R.id.tube_toggle);
+			tubeToggle.setChecked(true);
+
+			busToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+				public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+					if (isChecked) {
+						for(Marker marker: busMarkerList){
+							marker.setVisible(true);
+						}
+					} else {
+						for(Marker marker: busMarkerList){
+							marker.setVisible(false);
+						}
 					}
 				}
-			}
-		});
+			});
 
-		tubeToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-				if (isChecked) {
-					for(Marker marker: tubeMarkerList){
-						marker.setVisible(true);
-					}
-				} else {
-					for(Marker marker: tubeMarkerList){
-						marker.setVisible(false);
+			bikeToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+				public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+					if (isChecked) {
+						for(Marker marker: bikeMarkerList){
+							marker.setVisible(true);
+						}
+					} else {
+						for(Marker marker: bikeMarkerList){
+							marker.setVisible(false);
+						}
 					}
 				}
-			}
-		});
+			});
 
-		map.setOnMarkerClickListener(this);
-		map.setOnCameraChangeListener(this);
+			tubeToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+				public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+					if (isChecked) {
+						for(Marker marker: tubeMarkerList){
+							marker.setVisible(true);
+						}
+					} else {
+						for(Marker marker: tubeMarkerList){
+							marker.setVisible(false);
+						}
+					}
+				}
+			});
+
+			map.setOnMarkerClickListener(this);
+			map.setOnCameraChangeListener(this);
 		}
 	}
 
@@ -394,9 +400,7 @@ public class MapActivity extends FragmentActivity implements OnMarkerClickListen
 			tubeMarkerList.add(marker);
 		}
 	}
-
-
-
+	
 	class WeatherHttpGetAsyncTask extends AsyncTask<String, Void, String>{
 		@Override
 		protected String doInBackground(String... params) {
@@ -561,6 +565,34 @@ public class MapActivity extends FragmentActivity implements OnMarkerClickListen
 			}
 		}
 	}
+	
+	/*class QueryTubeStationAsyncTask extends AsyncTask<String, Void, String>{
+
+		@Override
+		protected String doInBackground(String... params) {
+			
+			Point currentLocation = new Point(Double.parseDouble(params[0]), Double.parseDouble(params[1]));
+			int mapArea = DatabaseClassificator.getInstance().checkTubeStationMapArea(currentLocation);
+			
+			StationDAO stationDao = new StationDAO(MapActivity.this);
+			stationDao.open();
+			List<Station> stationsInArea = stationDao.getStationsByArea(mapArea);
+			stationDao.close();
+			
+			return null;
+			
+		}
+		
+		@Override
+		protected void onPostExecute(String result) {
+		}
+		
+	}*/
+	
+	
+	
+	
+	
 
 	class BusStop{
 		private String _name;
