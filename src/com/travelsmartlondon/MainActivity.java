@@ -89,6 +89,7 @@ public class MainActivity extends Activity {
 	    {
 	    	System.err.println("Database could not be created");
 	    }*/
+	    
 	}
 	
 	private void loginWithGoogleAccount(View view) {
