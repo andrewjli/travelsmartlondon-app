@@ -111,7 +111,7 @@ public class MainActivity extends Activity {
 		@Override
 		public boolean handleMessage(Message msg) {
 			messageSuccessful(" PERMISSION NOT GRANTED", "NOT");
-			return false;
+			return true;
 		}
 		
 	}

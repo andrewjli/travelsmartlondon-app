@@ -145,14 +145,18 @@ public class MapActivity extends FragmentActivity implements OnMarkerClickListen
 		else{
 			_currentLocation = getCurrentLocation();
 		}
-
-		_latitude = Double.toString(_currentLocation.getLatitude());
-		_longitude = Double.toString(_currentLocation.getLongitude());
+		
+		//51.523524,-0.132823
+		
+		_latitude = Double.toString(51.523524);//Double.toString(_currentLocation.getLatitude());
+		_longitude = Double.toString(-0.132823); //Double.toString(_currentLocation.getLongitude());
 
 		weatherHttpGetAsyncTask.execute(_latitude, _longitude);
+		//tubeGetAsyncTask.execute(_latitude, _longitude);
 
-		map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(_currentLocation.getLatitude(),_currentLocation.getLongitude()), 15));
-
+		map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(51.523524,-0.132823), 15));
+		
+		
 
 		addMarker(goodgestation, map);
 		addMarker(warrenstation, map);
@@ -279,8 +283,11 @@ public class MapActivity extends FragmentActivity implements OnMarkerClickListen
 		boolean wifi = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI)
 				.isConnectedOrConnecting();
 
-		boolean internet = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE)
+		boolean internet = false;
+		if(!wifi) { 
+			internet  = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE)
 				.isConnectedOrConnecting();
+		}
 
 		if(internet || wifi)
 		{
@@ -566,7 +573,7 @@ public class MapActivity extends FragmentActivity implements OnMarkerClickListen
 		}
 	}
 
-	/*class QueryTubeStationAsyncTask extends AsyncTask<String, Void, String>{
+	class QueryTubeStationAsyncTask extends AsyncTask<String, Void, String>{
 
 		@Override
 		protected String doInBackground(String... params) {
@@ -587,7 +594,7 @@ public class MapActivity extends FragmentActivity implements OnMarkerClickListen
 		protected void onPostExecute(String result) {
 		}
 
-	}*/
+	}
 
 
 	class BusStop{
