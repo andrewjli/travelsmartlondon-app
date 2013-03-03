@@ -67,7 +67,7 @@ public class TubeLineActivity extends ListActivity {
 	private Map<String, String> _lineStatusDetails;
 	private boolean _isLoggedIn;
 	
-	private Map<Integer, Boolean> _wasDisplayedAtPosition;
+	private Map<Integer, Boolean> _ratingBarWasDisplayedAtPosition;
 
 	/*
 	@Override
@@ -90,7 +90,7 @@ public class TubeLineActivity extends ListActivity {
 		
 		this._positionLineMap = new ConcurrentHashMap<Integer, String>();
 		this._list = new ArrayList<Map<String,String>>();
-		this._wasDisplayedAtPosition = initialiseWasDisplayedAtPositionMap();
+		this._ratingBarWasDisplayedAtPosition = initialiseWasDisplayedAtPositionMap();
 		this._isLoggedIn = TSLApplicationContext.getInstance().checkIfUserIsLoggedIn();
 		
 		int resource = this._isLoggedIn ? R.layout.custom_tube_line_loggedin_view : R.layout.custom_tube_line_view;
@@ -130,22 +130,31 @@ public class TubeLineActivity extends ListActivity {
 				HttpResponse httpResponse = httpClient.execute(httpGet);
 
 			    BufferedReader reader = new BufferedReader(new InputStreamReader(httpResponse.getEntity().getContent(), "UTF-8"));
-			    String json = reader.readLine();
-			    JSONObject jsonObject = new JSONObject(json);
+			    
+			    String json = "";
 			    
 			    Map<String, String> linesStatus = new LinkedHashMap<String, String>();
 			    _lineStatusDetails = new HashMap<String,String>();
 			    
-			    for(int i = 0; i < jsonObject.length() - 1; i++){
-			    	String index = Integer.toString(i);
-			    	JSONObject temp = (JSONObject) jsonObject.get(index);
-			    	String line = temp.getString("lineName");
-			    	String status = temp.getString("statusDescription");
-			    	String statusDetails = temp.getString("statusDetails");
-			    	_lineStatusDetails.put(line, statusDetails);
-			    	linesStatus.put(line, status);
+			    try {
+				    json = reader.readLine(); 
+				    JSONObject jsonObject = new JSONObject(json);
+				    
+				    for(int i = 0; i < jsonObject.length() - 1; i++){
+				    	String index = Integer.toString(i);
+				    	JSONObject temp = (JSONObject) jsonObject.get(index);
+				    	String line = temp.getString("lineName");
+				    	String status = temp.getString("statusDescription");
+				    	String statusDetails = temp.getString("statusDetails");
+				    	_lineStatusDetails.put(line, statusDetails);
+				    	linesStatus.put(line, status);
 			    };
-			    
+			    } catch(IOException e) {
+			    	//no lines returned - this is handled correctly automatically
+			    } catch (JSONException e) {
+			    	//no lines returned - this is handled correctly automatically
+			    }
+
 			    int i=0;
 			    
 			    Set<String> lines = linesStatus.keySet();
@@ -208,9 +217,6 @@ public class TubeLineActivity extends ListActivity {
 			} catch (NullPointerException npe) {
 				System.out.println(" Null Pointer Exception :" + npe);
 				npe.printStackTrace();
-			} catch (JSONException jsone) {
-				System.out.println("JSON Exception :" + jsone);
-				jsone.printStackTrace();
 			}
 			return null;
 		}
@@ -294,15 +300,11 @@ public class TubeLineActivity extends ListActivity {
 			list.setOnClickListener(listener);
 			
 			final String line = _positionLineMap.get(position_);
-			
-			/*
-			if(_isLoggedIn && !_wasDisplayedAtPosition.get(position_)) {
+
+			if(_isLoggedIn && !_ratingBarWasDisplayedAtPosition.get(position_)) {
 				final LinearLayout ratingLayout = (LinearLayout) view.findViewById(R.id.rating_layout);
-				Button button = new Button(TubeLineActivity.this);
-				button.setText("RATE");
-				button.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
-				ratingLayout.addView(button);
-				_wasDisplayedAtPosition.put(position_, true);
+				Button button = (Button) ratingLayout.findViewById(R.id.rate_button);
+				final int position = position_;
 				button.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
@@ -314,24 +316,19 @@ public class TubeLineActivity extends ListActivity {
 						       .setTitle("Give your rating to " + line + " line");
 						LayoutInflater inflater = TubeLineActivity.this.getLayoutInflater();
 						
-						LinearLayout localLayout = new LinearLayout(TubeLineActivity.this);
-						localLayout.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+						final LinearLayout localLayout = (LinearLayout) inflater.inflate(R.layout.give_rating_dialog, null);
+						final RatingBar rating = (RatingBar) localLayout.findViewById(R.id.rating);
 						
-						final RatingBar rating = new RatingBar(TubeLineActivity.this, null, android.R.attr.ratingBarStyle);
-						rating.setNumStars(5);
-						
-						localLayout.addView(rating);
-						
-						rating.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+						builder.setView(localLayout);
  
-						builder//.setView(localLayout)
-							.setPositiveButton("SUBMIT", new DialogInterface.OnClickListener() {
+						builder.setPositiveButton("SUBMIT", new DialogInterface.OnClickListener() {
 					               @Override
 					               public void onClick(DialogInterface dialog, int id) {
 					            	   RatingBar resultRating = new RatingBar(TubeLineActivity.this, null, android.R.attr.ratingBarStyleIndicator);
 					            	   ratingLayout.removeAllViews();
 					            	   resultRating.setRating(rating.getRating());
 					            	   ratingLayout.addView(resultRating);
+					            	   _ratingBarWasDisplayedAtPosition.put(position,true);
 					                   dialog.dismiss();
 					               }
 					           })
@@ -346,7 +343,7 @@ public class TubeLineActivity extends ListActivity {
 					}
 				});
 				
-			}*/
+			}
 			
 			
 			if(line.equals(PICCADILLY_LINE)) {
