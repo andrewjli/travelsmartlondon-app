@@ -36,9 +36,9 @@ public class StationDAO {
 		_dbHelper.close();
 	  }
 	
-	public List<Station> getStationsByArea(int area_){
+	public List<TubeStation> getStationsByArea(int area_){
 		
-		List<Station> stations = new ArrayList<Station>();
+		List<TubeStation> stations = new ArrayList<TubeStation>();
 		
 		String table;
 				
@@ -76,16 +76,16 @@ public class StationDAO {
 		return stations;
 	}
 
-	private ArrayList<Station> getStationsFromDB(String table_) {
+	private ArrayList<TubeStation> getStationsFromDB(String table_) {
 		
-		ArrayList<Station> stations = new ArrayList<Station>();
+		ArrayList<TubeStation> stations = new ArrayList<TubeStation>();
 		
 		Cursor cursor = _tslDB.query(table_,null,null,null,null,null,null);
 		
 		cursor.moveToFirst();
 		
 		while(!cursor.isAfterLast()){
-			Station station = cursorToStation(cursor);
+			TubeStation station = cursorToStation(cursor);
 			stations.add(station);
 			cursor.moveToNext();
 		}
@@ -96,7 +96,7 @@ public class StationDAO {
 		
 	}
 
-	private Station cursorToStation(Cursor cursor_) {
+	private TubeStation cursorToStation(Cursor cursor_) {
 		
 		ArrayList<String> lines = new ArrayList<String>();
 		for(int n=3;n<8;n++){
@@ -105,8 +105,8 @@ public class StationDAO {
 		}
 		
 		
-		Station station = new TubeStation(cursor_.getString(0),cursor_.getInt(1),cursor_.getString(2),
-				cursor_.getDouble(9),cursor_.getDouble(8),lines);
+		TubeStation station = new TubeStation(cursor_.getString(0),cursor_.getInt(1),cursor_.getString(2),
+				cursor_.getDouble(8), cursor_.getDouble(9),lines);
 		
 		
 		return station;

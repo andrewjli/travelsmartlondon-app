@@ -106,7 +106,7 @@ public class MapActivity extends FragmentActivity implements OnMarkerClickListen
 	private JSONArray jsonBikeArray;
 	private JSONArray jsonBusStopArray;
 	
-	private List<Station> _stationsInArea;
+	private List<TubeStation> _stationsInArea;
 
 	/*
 	Dummy tube stations for the purpose of the demo 
@@ -154,12 +154,12 @@ public class MapActivity extends FragmentActivity implements OnMarkerClickListen
 		_longitude = Double.toString(-0.132823); //Double.toString(_currentLocation.getLongitude());
 
 		weatherHttpGetAsyncTask.execute(_latitude, _longitude);
-		tubeGetAsyncTask.execute(_latitude, _longitude);
+		
 
 		map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(51.523524,-0.132823), 15));
 		
 		
-
+		tubeGetAsyncTask.execute(_latitude, _longitude);
 		//addMarker(goodgestation, map);
 		//addMarker(warrenstation, map);
 		//addMarker(eustonstation, map);
@@ -243,6 +243,8 @@ public class MapActivity extends FragmentActivity implements OnMarkerClickListen
 		bikeHttpGetAsyncTask.execute(_latitude, _longitude, RADIUS);
 		busStopHttpGetAsyncTask = new BusStopHttpGetAsyncTask();
 		busStopHttpGetAsyncTask.execute(_latitude, _longitude, RADIUS);
+		tubeGetAsyncTask = new QueryTubeStationAsyncTask();
+		tubeGetAsyncTask.execute(_latitude, _longitude);
 	}
 
 	private Location getCurrentLocation() {
@@ -599,10 +601,8 @@ public class MapActivity extends FragmentActivity implements OnMarkerClickListen
 
 		@Override
 		protected void onPostExecute(String result) {
-			for(Station station : _stationsInArea) {
-				TubeStation ts = new TubeStation(station.getName(), station.getCode(), station.getCoordinates().latitude, 
-						station.getCoordinates().longitude);
-				addMarker(ts, map);
+			for(TubeStation station : _stationsInArea) {
+				addMarker(station, map);
 			}
 		}
 
