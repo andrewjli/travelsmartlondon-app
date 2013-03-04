@@ -13,10 +13,9 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import com.travelsmartlondon.BusCountdownActivity.HttpGetAsyncTask;
 
 import android.app.ListActivity;
 import android.content.Intent;
@@ -118,12 +117,18 @@ public class TubeCountdownActivity extends ListActivity{
 				    String json = reader.readLine();
 				    JSONObject jsonObject = new JSONObject(json);
 				    
-				    for(int i = 0; i < jsonObject.length()-1; i++){
-				    	String index = Integer.toString(i);
-				    	populateList(jsonObject.getJSONObject(index).get("Route").toString(),
-				    			jsonObject.getJSONObject(index).get("Time").toString(),
-				    			"towards " + jsonObject.getJSONObject(index).get("Destination").toString()
-				    			);
+				    JSONArray platforms = jsonObject.getJSONArray("Platform");
+				    
+				    for(int i = 0; i < platforms.length(); i++){
+				    	JSONObject platform = platforms.getJSONObject(i);
+				    	String platformName = platform.getString("PlatformName");
+				    	JSONArray trains = platform.getJSONArray("Trains");
+				    	for (int j = 0;  j < trains.length() ; j++) {
+				    		JSONObject train = trains.getJSONObject(j);
+				    		String destination = train.getString("Destination");
+				    		String timeTo = train.getString("TimeTo");
+				    		populateList(platformName, timeTo, destination);
+				    	}
 				    };
 	
 				} catch (ClientProtocolException cpe) {
