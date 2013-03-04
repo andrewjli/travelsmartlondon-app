@@ -402,6 +402,11 @@ public class MapActivity extends FragmentActivity implements OnMarkerClickListen
 	private void addMarker(Station station, GoogleMap map){
 		if(station.getClass() == TubeStation.class){
 			Marker marker = map.addMarker(new MarkerOptions().position(station.getCoordinates()).icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.tube_icon))));
+			if(!tubeToggle.isChecked()) {
+				marker.setVisible(false);
+			} else {
+				marker.setVisible(true);
+			}
 			tubeList.put(marker,station);
 			tubeMarkerList.add(marker);
 		}
@@ -595,7 +600,9 @@ public class MapActivity extends FragmentActivity implements OnMarkerClickListen
 		@Override
 		protected void onPostExecute(String result) {
 			for(Station station : _stationsInArea) {
-				addMarker(station, map);
+				TubeStation ts = new TubeStation(station.getName(), station.getCode(), station.getCoordinates().latitude, 
+						station.getCoordinates().longitude);
+				addMarker(ts, map);
 			}
 		}
 
