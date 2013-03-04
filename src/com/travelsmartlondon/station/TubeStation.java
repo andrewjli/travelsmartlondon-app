@@ -16,11 +16,21 @@ public class TubeStation extends Station{
 	}
 	
 	public TubeStation(String name_,int nlc_, String code_, double latitude_,double longitude_,
-			ArrayList<String> lines_)
+			List<String> lines_)
 	{
 		super(name_, code_, latitude_, longitude_);
 		this._nlc = nlc_;
 		this._lines = lines_;
+	}
+	
+	public ArrayList<String> getLinesAsArrayList(){
+		ArrayList<String> arrayList = new ArrayList<String>();
+		for(String line : this._lines) {
+			if(!line.equals(" *")) {
+				arrayList.add(line);
+			}
+		}
+		return arrayList;
 	}
 	
 }

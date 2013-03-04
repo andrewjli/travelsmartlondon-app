@@ -65,6 +65,7 @@ import com.travelsmartlondon.station.TubeStation;
 public class MapActivity extends FragmentActivity implements OnMarkerClickListener, OnCameraChangeListener{ 
 	public static final String ID_CODE = "com.travelsmartlondon.ID_CODE";
 	public static final String EXTRA_MESSAGE = "come.travelsmartlondon.EXTRA_MESSAGE";
+	public static final String TUBE_LINES = "com.travelsmartlondon.TUBE_LINES";
 	private static final int DIALOG_ALERT = 10;
 	private static final String RADIUS = "1000";
 
@@ -87,7 +88,7 @@ public class MapActivity extends FragmentActivity implements OnMarkerClickListen
 	private Map<Marker, BusStop> busList = new HashMap<Marker, BusStop>();
 	private List<Marker> busMarkerList = new ArrayList<Marker>();
 	private List<Marker> bikeMarkerList = new ArrayList<Marker>();
-	private Map<Marker, Station> tubeList = new HashMap<Marker, Station>();
+	private Map<Marker, TubeStation> tubeList = new HashMap<Marker, TubeStation>();
 	private List<Marker> tubeMarkerList = new ArrayList<Marker>();
 
 	private WeatherHttpGetAsyncTask weatherHttpGetAsyncTask = new WeatherHttpGetAsyncTask();
@@ -382,8 +383,9 @@ public class MapActivity extends FragmentActivity implements OnMarkerClickListen
 	private void showTubeIntent(Marker marker){
 		System.out.println("Event Listened");
 		Intent intent = new Intent(this, TubeCountdownActivity.class);
-		intent.putExtra(ID_CODE, "54958");
-		intent.putExtra(EXTRA_MESSAGE, "Euston Station");
+		intent.putExtra(ID_CODE, tubeList.get(marker).getCode());
+		intent.putExtra(EXTRA_MESSAGE, tubeList.get(marker).getName());
+		intent.putStringArrayListExtra(TUBE_LINES, tubeList.get(marker).getLinesAsArrayList());
 		startActivity(intent);
 	}
 
@@ -401,7 +403,7 @@ public class MapActivity extends FragmentActivity implements OnMarkerClickListen
 		return tempMarker;
 	}
 
-	private void addMarker(Station station, GoogleMap map){
+	private void addMarker(TubeStation station, GoogleMap map){
 		if(station.getClass() == TubeStation.class){
 			Marker marker = map.addMarker(new MarkerOptions().position(station.getCoordinates()).icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.tube_icon))));
 			if(!tubeToggle.isChecked()) {
