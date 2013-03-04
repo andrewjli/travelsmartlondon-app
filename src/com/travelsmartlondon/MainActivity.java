@@ -81,14 +81,14 @@ public class MainActivity extends Activity {
 			}
 	    });
 	    
-	   /* DBSQLiteHelper sqliteHelper = new DBSQLiteHelper(getApplicationContext());
+	    DBSQLiteHelper sqliteHelper = new DBSQLiteHelper(getApplicationContext());
 	    try{
 	    	sqliteHelper.createDataBase();
 	    }
 	    catch(IOException e)
 	    {
 	    	System.err.println("Database could not be created");
-	    }*/
+	    }
 	    
 	}
 	

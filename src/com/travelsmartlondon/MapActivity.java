@@ -93,7 +93,7 @@ public class MapActivity extends FragmentActivity implements OnMarkerClickListen
 	private WeatherHttpGetAsyncTask weatherHttpGetAsyncTask = new WeatherHttpGetAsyncTask();
 	private BikeHttpGetAsyncTask bikeHttpGetAsyncTask = new BikeHttpGetAsyncTask();
 	private BusStopHttpGetAsyncTask busStopHttpGetAsyncTask = new BusStopHttpGetAsyncTask();
-	//private QueryTubeStationAsyncTask tubeGetAsyncTask = new QueryTubeStationAsyncTask();
+	private QueryTubeStationAsyncTask tubeGetAsyncTask = new QueryTubeStationAsyncTask();
 
 
 	private String _latitude;
@@ -105,6 +105,8 @@ public class MapActivity extends FragmentActivity implements OnMarkerClickListen
 
 	private JSONArray jsonBikeArray;
 	private JSONArray jsonBusStopArray;
+	
+	private List<Station> _stationsInArea;
 
 	/*
 	Dummy tube stations for the purpose of the demo 
@@ -152,16 +154,16 @@ public class MapActivity extends FragmentActivity implements OnMarkerClickListen
 		_longitude = Double.toString(-0.132823); //Double.toString(_currentLocation.getLongitude());
 
 		weatherHttpGetAsyncTask.execute(_latitude, _longitude);
-		//tubeGetAsyncTask.execute(_latitude, _longitude);
+		tubeGetAsyncTask.execute(_latitude, _longitude);
 
 		map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(51.523524,-0.132823), 15));
 		
 		
 
-		addMarker(goodgestation, map);
-		addMarker(warrenstation, map);
-		addMarker(eustonstation, map);
-		addMarker(tcrstation, map);
+		//addMarker(goodgestation, map);
+		//addMarker(warrenstation, map);
+		//addMarker(eustonstation, map);
+		//addMarker(tcrstation, map);
 
 
 		busToggle = (ToggleButton) findViewById(R.id.bus_toggle);
@@ -583,7 +585,7 @@ public class MapActivity extends FragmentActivity implements OnMarkerClickListen
 
 			StationDAO stationDao = new StationDAO(MapActivity.this);
 			stationDao.open();
-			List<Station> stationsInArea = stationDao.getStationsByArea(mapArea);
+			_stationsInArea = stationDao.getStationsByArea(mapArea);
 			stationDao.close();
 
 			return null;
@@ -592,6 +594,9 @@ public class MapActivity extends FragmentActivity implements OnMarkerClickListen
 
 		@Override
 		protected void onPostExecute(String result) {
+			for(Station station : _stationsInArea) {
+				addMarker(station, map);
+			}
 		}
 
 	}
