@@ -34,6 +34,7 @@ public class StationDAO {
 
 	public void close() {    
 		_dbHelper.close();
+		_tslDB.close();
 	  }
 	
 	public List<TubeStation> getStationsByArea(int area_){

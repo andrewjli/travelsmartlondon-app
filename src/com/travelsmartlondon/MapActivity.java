@@ -149,22 +149,22 @@ public class MapActivity extends FragmentActivity implements OnMarkerClickListen
 			_currentLocation = getCurrentLocation();
 		}
 		
-		//51.523524,-0.132823
-		
-		_latitude = Double.toString(51.523524);//Double.toString(_currentLocation.getLatitude());
-		_longitude = Double.toString(-0.132823); //Double.toString(_currentLocation.getLongitude());
+		if(_currentLocation == null){
+			_latitude = Double.toString(51.523524);
+			_longitude = Double.toString(-0.132823);
+		}
+		else{
+			_latitude = Double.toString(_currentLocation.getLatitude());
+			_longitude = Double.toString(_currentLocation.getLongitude());
+		}
 
 		weatherHttpGetAsyncTask.execute(_latitude, _longitude);
 		
 
-		map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(51.523524,-0.132823), 15));
+		map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(Double.parseDouble(_latitude),Double.parseDouble(_longitude)), 15));
 		
 		
 		tubeGetAsyncTask.execute(_latitude, _longitude);
-		//addMarker(goodgestation, map);
-		//addMarker(warrenstation, map);
-		//addMarker(eustonstation, map);
-		//addMarker(tcrstation, map);
 
 
 		busToggle = (ToggleButton) findViewById(R.id.bus_toggle);
@@ -266,8 +266,7 @@ public class MapActivity extends FragmentActivity implements OnMarkerClickListen
 	public void showNoInternetDialog(){
 		AlertDialog.Builder dialog = new AlertDialog.Builder(this);
 		dialog.setTitle("Internet connection!");
-		dialog.setMessage("No internet connection was dectedted./n " +
-				"Please enable mobile internet or wifi to use map capabilities");
+		dialog.setMessage("No internet connection was dectedted.Please enable mobile internet or wifi to use map capabilities");
 		dialog.setNegativeButton("OK", new DialogInterface.OnClickListener() {
 
 			@Override
@@ -290,16 +289,18 @@ public class MapActivity extends FragmentActivity implements OnMarkerClickListen
 
 		boolean internet = false;
 		if(!wifi) { 
+			if(connectivityManager.getActiveNetworkInfo() != null){
 			internet  = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE)
 				.isConnectedOrConnecting();
+			}
 		}
 
-		if(internet || wifi)
+		if(!internet && !wifi)
 		{
-			return true;
+			return false;
 		}
 
-		return false;
+		return true;
 	}
 
 	protected boolean isBetterLocation(Location newLocation_, Location currentBestLocation_) {
