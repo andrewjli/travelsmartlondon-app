@@ -137,11 +137,15 @@ public class MainActivity extends Activity {
 	    
 	        // The token is a named value in the bundle. The name of the value
 	        // is stored in the constant AccountManager.KEY_AUTHTOKEN.
+			if(bundle != null) {
 	        String token = bundle.getString(AccountManager.KEY_AUTHTOKEN);//not used
 	        String emailAddress = bundle.getString(AccountManager.KEY_ACCOUNT_NAME);
 	        TSLApplicationContext.getInstance().injectEmailAddressOnceUserLoggedIn(emailAddress);
 	        messageSuccessful(emailAddress, LOGIN);
 	        ((TextView)this._view).setText(LOGOUT);
+			} else { 
+				messageSuccessful(" PERMISSION NOT GRANTED", "NOT");
+			}
 	        showProgress(false);
 	    }
 	}
