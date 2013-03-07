@@ -406,7 +406,7 @@ public class MapActivity extends FragmentActivity implements OnMarkerClickListen
 
 	private void addMarker(TubeStation station, GoogleMap map){
 		if(station.getClass() == TubeStation.class){
-			Marker marker = map.addMarker(new MarkerOptions().position(station.getCoordinates()).icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.tube_icon))));
+			Marker marker = map.addMarker(new MarkerOptions().position(station.getCoordinates()).icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.tube_icon_coloured))));
 			if(!tubeToggle.isChecked()) {
 				marker.setVisible(false);
 			} else {
@@ -509,7 +509,7 @@ public class MapActivity extends FragmentActivity implements OnMarkerClickListen
 				while(!jsonBusStopArray.isNull(index)){
 					JSONObject jsonCurrentObject = jsonBusStopArray.getJSONObject(index);
 					Marker marker = map.addMarker(new MarkerOptions().position(new LatLng(jsonCurrentObject.getDouble("lat"), jsonCurrentObject.getDouble("long")))
-							.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.bus_icon))));
+							.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.bus_icon_coloured))));
 					busList.put(marker, new BusStop(jsonCurrentObject.getString("stopName"), jsonCurrentObject.getString("stopCode")));
 					if(!busToggle.isChecked()){
 						marker.setVisible(false);
@@ -566,7 +566,7 @@ public class MapActivity extends FragmentActivity implements OnMarkerClickListen
 				while(!jsonBikeArray.isNull(index)){
 					JSONObject jsonCurrentObject = jsonBikeArray.getJSONObject(index);
 					Marker marker = map.addMarker(new MarkerOptions().position(new LatLng(jsonCurrentObject.getDouble("lat"), jsonCurrentObject.getDouble("long")))
-							.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.bike_icon)))
+							.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.bike_icon_coloured)))
 							.title(jsonCurrentObject.getString("name"))
 							.snippet(jsonCurrentObject.getString("nbBikes") + "/" + jsonCurrentObject.getString("dbDocks") + " bikes available"));
 					if(!bikeToggle.isChecked()){
