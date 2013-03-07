@@ -33,4 +33,8 @@ public class TubeStation extends Station{
 		return arrayList;
 	}
 	
+	public int getNLC(){
+		return this._nlc;
+	}
+	
 }

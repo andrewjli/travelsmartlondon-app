@@ -38,6 +38,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.text.format.Time;
 import android.view.Window;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
@@ -66,6 +67,9 @@ public class MapActivity extends FragmentActivity implements OnMarkerClickListen
 	public static final String ID_CODE = "com.travelsmartlondon.ID_CODE";
 	public static final String EXTRA_MESSAGE = "come.travelsmartlondon.EXTRA_MESSAGE";
 	public static final String TUBE_LINES = "com.travelsmartlondon.TUBE_LINES";
+	public static final String STATION_NLC = "com.travelsmartlondon.STATION_NLC";
+	public static final String CURRENT_TIME = "com.travelsmart.CURRENT_TIME";
+	public static final String TUBE_NAME="com.travelsmart.TUBE_NAME";
 	private static final int DIALOG_ALERT = 10;
 	private static final String RADIUS = "1000";
 
@@ -370,7 +374,7 @@ public class MapActivity extends FragmentActivity implements OnMarkerClickListen
 					if(which == 0){
 						showTubeIntent(getTempMarker());
 					}else{
-						showCrowdednessIntent();
+						showCrowdednessIntent(getTempMarker());
 					}
 				}
 			});
@@ -390,9 +394,20 @@ public class MapActivity extends FragmentActivity implements OnMarkerClickListen
 		startActivity(intent);
 	}
 
-	private void showCrowdednessIntent(){
+	private void showCrowdednessIntent(Marker marker){
 		System.out.println("Event Listened");
 		Intent intent = new Intent(this, CrowdednessActivity.class);
+		
+		//Get the current Time
+		Time currentTime = new Time();
+		currentTime.setToNow();
+		String timeValue = currentTime.toString();
+		timeValue = timeValue.substring(9, 13);
+		
+
+		intent.putExtra(TUBE_NAME, tubeList.get(marker).getName());
+		intent.putExtra(STATION_NLC,Integer.toString(tubeList.get(marker).getNLC()));
+		intent.putExtra(CURRENT_TIME, timeValue);
 		startActivity(intent);
 	}
 
