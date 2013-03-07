@@ -109,8 +109,7 @@ public class CrowdednessActivity extends Activity {
 			imageview.setVisibility(View.INVISIBLE);
 		}
 		
-		for(int n=0;n<m_;n++)
-		{
+		for(int n=0;n<m_;n++){
 			ImageView imageview = (ImageView) findViewById(_imageViews[n]);
 			imageview.setVisibility(View.VISIBLE);
 		}

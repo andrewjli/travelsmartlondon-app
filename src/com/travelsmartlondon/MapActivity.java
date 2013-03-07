@@ -79,7 +79,6 @@ public class MapActivity extends FragmentActivity implements OnMarkerClickListen
 
 	private static final int TWO_MINUTES = 1000 * 60 * 2;
 
-
 	private boolean _isConnected;
 	private GoogleMap _map;
 	private Location  _currentLocation;
