@@ -38,6 +38,8 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
@@ -102,6 +104,7 @@ public class MapActivity extends FragmentActivity implements OnMarkerClickListen
 
 	private String weatherDesc;
 	private String weatherIconUrl;
+	private String temperature;
 	private Drawable weatherIcon;
 
 	private JSONArray jsonBikeArray;
@@ -432,10 +435,9 @@ public class MapActivity extends FragmentActivity implements OnMarkerClickListen
 				JSONObject jsonObject = new JSONObject(json);
 
 				weatherDesc = jsonObject.getString("WeatherDesc");
-				System.out.println(weatherDesc);
 				weatherIconUrl = jsonObject.getString("IconURL");
-				System.out.println(weatherIconUrl);
-
+				temperature = jsonObject.getString("Temperature");
+				
 				InputStream is = (InputStream) new URL(weatherIconUrl).getContent();
 				weatherIcon = Drawable.createFromStream(is, "src name");
 
@@ -463,8 +465,12 @@ public class MapActivity extends FragmentActivity implements OnMarkerClickListen
 
 			ImageView weatherIconImageView = (ImageView) findViewById(R.id.weather_icon);
 			weatherIconImageView.setImageDrawable(weatherIcon);
-
-
+			weatherIconImageView.setOnClickListener(new OnClickListener(){
+				@Override
+				public void onClick(View v) {
+					Toast.makeText(getApplicationContext(), "Today's weather forecast: " + "\n" +  temperature + "¡ÆC, "  + weatherDesc, Toast.LENGTH_LONG).show();
+				}
+			});
 		}
 	}
 
