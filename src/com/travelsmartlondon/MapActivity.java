@@ -39,6 +39,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.text.format.Time;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
@@ -105,6 +107,7 @@ public class MapActivity extends FragmentActivity implements OnMarkerClickListen
 
 	private String weatherDesc;
 	private String weatherIconUrl;
+	private String temperature;
 	private Drawable weatherIcon;
 
 	private JSONArray jsonBikeArray;
@@ -420,7 +423,7 @@ public class MapActivity extends FragmentActivity implements OnMarkerClickListen
 
 	private void addMarker(TubeStation station, GoogleMap map){
 		if(station.getClass() == TubeStation.class){
-			Marker marker = map.addMarker(new MarkerOptions().position(station.getCoordinates()).icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.tube_icon))));
+			Marker marker = map.addMarker(new MarkerOptions().position(station.getCoordinates()).icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.tube_icon_coloured))));
 			if(!tubeToggle.isChecked()) {
 				marker.setVisible(false);
 			} else {
@@ -446,10 +449,9 @@ public class MapActivity extends FragmentActivity implements OnMarkerClickListen
 				JSONObject jsonObject = new JSONObject(json);
 
 				weatherDesc = jsonObject.getString("WeatherDesc");
-				System.out.println(weatherDesc);
 				weatherIconUrl = jsonObject.getString("IconURL");
-				System.out.println(weatherIconUrl);
-
+				temperature = jsonObject.getString("Temperature");
+				
 				InputStream is = (InputStream) new URL(weatherIconUrl).getContent();
 				weatherIcon = Drawable.createFromStream(is, "src name");
 
@@ -477,8 +479,12 @@ public class MapActivity extends FragmentActivity implements OnMarkerClickListen
 
 			ImageView weatherIconImageView = (ImageView) findViewById(R.id.weather_icon);
 			weatherIconImageView.setImageDrawable(weatherIcon);
-
-
+			weatherIconImageView.setOnClickListener(new OnClickListener(){
+				@Override
+				public void onClick(View v) {
+					Toast.makeText(getApplicationContext(), "Today's weather forecast: " + "\n" +  temperature + "¡ÆC, "  + weatherDesc, Toast.LENGTH_LONG).show();
+				}
+			});
 		}
 	}
 
@@ -523,7 +529,7 @@ public class MapActivity extends FragmentActivity implements OnMarkerClickListen
 				while(!jsonBusStopArray.isNull(index)){
 					JSONObject jsonCurrentObject = jsonBusStopArray.getJSONObject(index);
 					Marker marker = map.addMarker(new MarkerOptions().position(new LatLng(jsonCurrentObject.getDouble("lat"), jsonCurrentObject.getDouble("long")))
-							.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.bus_icon))));
+							.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.bus_icon_coloured))));
 					busList.put(marker, new BusStop(jsonCurrentObject.getString("stopName"), jsonCurrentObject.getString("stopCode")));
 					if(!busToggle.isChecked()){
 						marker.setVisible(false);
@@ -580,7 +586,7 @@ public class MapActivity extends FragmentActivity implements OnMarkerClickListen
 				while(!jsonBikeArray.isNull(index)){
 					JSONObject jsonCurrentObject = jsonBikeArray.getJSONObject(index);
 					Marker marker = map.addMarker(new MarkerOptions().position(new LatLng(jsonCurrentObject.getDouble("lat"), jsonCurrentObject.getDouble("long")))
-							.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.bike_icon)))
+							.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.bike_icon_coloured)))
 							.title(jsonCurrentObject.getString("name"))
 							.snippet(jsonCurrentObject.getString("nbBikes") + "/" + jsonCurrentObject.getString("dbDocks") + " bikes available"));
 					if(!bikeToggle.isChecked()){

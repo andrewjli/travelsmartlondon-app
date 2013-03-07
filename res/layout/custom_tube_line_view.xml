@@ -19,7 +19,7 @@
 	            android:layout_width="wrap_content"
 	            android:layout_height="50dp"
 	            android:textIsSelectable="false"
-	            android:textSize="45sp"
+	            android:textSize="30sp"
 	            android:textStyle="bold" />
 
 	       <!-- 
@@ -49,6 +49,14 @@
 	        android:textColor ="#cfcfcf"
 	        android:textStyle="italic"
 	        android:typeface="sans" />
+        
+        <LinearLayout
+			    	android:orientation="horizontal"
+			    	android:layout_width="fill_parent"
+			    	android:layout_height="wrap_content"
+			    	android:gravity="right" 
+			    	android:id="@+id/number_info_layout">  
+		</LinearLayout>
         
     
 </LinearLayout>

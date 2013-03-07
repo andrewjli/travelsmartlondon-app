@@ -1,6 +1,9 @@
 package com.travelsmartlondon.context;
 
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
+import com.travelsmartlondon.TubeLineActivity;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -14,6 +17,7 @@ import android.content.SharedPreferences;
 public class TSLApplicationContext {
 
 	private String _emailAddress;
+	private Map<String, Float> _ratings;
 	
 	//public static final String USER_EMAIL_ADDRESS = "username";
 	
@@ -22,7 +26,22 @@ public class TSLApplicationContext {
 	/*
 	 * Private Constructor to ensure that the application complies with the Singleton pattern
 	 */
-	private TSLApplicationContext() {}
+	private TSLApplicationContext() {
+		this._ratings = new ConcurrentHashMap<String, Float>();
+		this._ratings.put(TubeLineActivity.PICCADILLY_LINE, (float) -1.0);
+		this._ratings.put(TubeLineActivity.BAKERLOO_LINE, (float) -1.0);
+		this._ratings.put(TubeLineActivity.CENTRAL_LINE, (float) -1.0);
+		this._ratings.put(TubeLineActivity.CIRCLE_LINE, (float) -1.0);
+		this._ratings.put(TubeLineActivity.DISTRICT_LINE, (float) -1.0);
+		this._ratings.put(TubeLineActivity.DLR_LINE, (float) -1.0);
+		this._ratings.put(TubeLineActivity.HAMMERSMITH_CITY_LINE, (float) -1.0);
+		this._ratings.put(TubeLineActivity.JUBILEE_LINE, (float) -1.0);
+		this._ratings.put(TubeLineActivity.METROPOLITAN_LINE, (float) -1.0);
+		this._ratings.put(TubeLineActivity.NORTHERN_LINE, (float) -1.0);
+		this._ratings.put(TubeLineActivity.OVERGROUND_LINE, (float) -1.0);
+		this._ratings.put(TubeLineActivity.VICTORIA_LINE, (float) -1.0);
+		this._ratings.put(TubeLineActivity.WATERLOO_CITY_LINE, (float) -1.0);
+	}
 	
 	public static TSLApplicationContext getInstance() {
 		return INSTANCE;
@@ -39,69 +58,20 @@ public class TSLApplicationContext {
 	public void injectEmailAddressOnceUserLoggedIn(String email_) {
 		this._emailAddress = email_;
 	}
-
-	/*
-	private Map<String, Object> _preferenceMap = new ConcurrentHashMap<String, Object>(); 
 	
-	@Override
-	public boolean contains(String preference_) {
-		return this._preferenceMap.containsKey(preference_);
+	public boolean lineIsRated(String line_) {
+		if(this._ratings.get(line_).equals((float) -1.0)) {
+			return false;
+		} else {
+			return true;
+		}
 	}
-
-	@Override
-	public Editor edit() {
-		// TODO Auto-generated method stub
-		return null;
+	
+	public void submitRatingForLine(String line_, Float rating_) throws IllegalArgumentException {
+		this._ratings.put(line_, rating_);
 	}
-
-	@Override
-	public Map<String, ?> getAll() {
-		return this._preferenceMap;
+	
+	public Float fetchOwnRatingForLine(String line_) throws IllegalArgumentException {
+		return (this._ratings.get(line_));
 	}
-
-	@Override
-	public boolean getBoolean(String key_, boolean defValue_) {
-		return (this._preferenceMap.containsKey(key_) ? (Boolean) this._preferenceMap.get(key_) : defValue_);
-	}
-
-	@Override
-	public float getFloat(String key_, float defValue_) {
-		return (this._preferenceMap.containsKey(key_) ? (Float) this._preferenceMap.get(key_) : defValue_);
-	}
-
-	@Override
-	public int getInt(String key_, int defValue_) {
-		return (this._preferenceMap.containsKey(key_) ? (Integer) this._preferenceMap.get(key_) : defValue_);
-	}
-
-	@Override
-	public long getLong(String key_, long defValue_) {
-		return (this._preferenceMap.containsKey(key_) ? (Long) this._preferenceMap.get(key_) : defValue_);
-	}
-
-	@Override
-	public String getString(String key_, String defValue_) {
-		return (this._preferenceMap.containsKey(key_) ? (String) this._preferenceMap.get(key_) : defValue_);
-	}
-
-	@Override
-	public Set<String> getStringSet(String key_, Set<String> defValue_) {
-		Set<String> set = (Set<String>) this._preferenceMap.get(key_);
-		return (this._preferenceMap.containsKey(key_) ? set : defValue_);
-	}
-
-	@Override
-	public void registerOnSharedPreferenceChangeListener(
-			OnSharedPreferenceChangeListener listener) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void unregisterOnSharedPreferenceChangeListener(
-			OnSharedPreferenceChangeListener listener) {
-		// TODO Auto-generated method stub
-		
-	}
-	*/
 }
