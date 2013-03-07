@@ -54,7 +54,7 @@
         android:layout_alignParentTop="true"
         android:layout_marginTop="12sp"
         android:layout_marginLeft="12sp"
-        android:alpha="0.77"
+        android:alpha="0.85"
         android:visibility="visible" />
 
 </RelativeLayout>

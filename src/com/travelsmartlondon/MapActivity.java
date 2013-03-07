@@ -39,6 +39,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.text.format.Time;
+import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -73,7 +74,7 @@ public class MapActivity extends FragmentActivity implements OnMarkerClickListen
 	public static final String CURRENT_TIME = "com.travelsmart.CURRENT_TIME";
 	public static final String TUBE_NAME="com.travelsmart.TUBE_NAME";
 	private static final int DIALOG_ALERT = 10;
-	private static final String RADIUS = "1000";
+	private static final String RADIUS = "1500";
 
 	ToggleButton busToggle;
 	ToggleButton bikeToggle;
@@ -104,6 +105,8 @@ public class MapActivity extends FragmentActivity implements OnMarkerClickListen
 
 	private String _latitude;
 	private String _longitude;
+	private Double _lastUpdatedLatitude;
+	private Double _lastUpdatedLongitude;
 
 	private String weatherDesc;
 	private String weatherIconUrl;
@@ -114,17 +117,7 @@ public class MapActivity extends FragmentActivity implements OnMarkerClickListen
 	private JSONArray jsonBusStopArray;
 	
 	private List<TubeStation> _stationsInArea;
-
-	/*
-	Dummy tube stations for the purpose of the demo 
-	TODO: Real-time live data
-	 */
-
-	TubeStation goodgestation = new TubeStation("Goodge Street Station", "GST",51.520424996045500000, -0.134662152092394320);
-	TubeStation warrenstation = new TubeStation("Warren Street Station", "76205",51.524511517547950000, -.138272313383213400);
-	TubeStation eustonstation = new TubeStation("Euston Station", "76205",51.528596260899460000, -.133289718799315530);
-	TubeStation tcrstation = new TubeStation("Tottenham Court Road Station", "76205", 51.516209552513860000, -.130870518140944360);
-
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -165,14 +158,12 @@ public class MapActivity extends FragmentActivity implements OnMarkerClickListen
 		}
 
 		weatherHttpGetAsyncTask.execute(_latitude, _longitude);
-		
+		bikeHttpGetAsyncTask.execute(_latitude, _longitude, RADIUS);
+		busStopHttpGetAsyncTask.execute(_latitude, _longitude, RADIUS);
+		tubeGetAsyncTask.execute(_latitude, _longitude);
 
 		map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(Double.parseDouble(_latitude),Double.parseDouble(_longitude)), 15));
 		
-		
-		tubeGetAsyncTask.execute(_latitude, _longitude);
-
-
 		busToggle = (ToggleButton) findViewById(R.id.bus_toggle);
 		busToggle.setChecked(true);
 		busToggle.setBackgroundColor(Color.WHITE);
@@ -235,25 +226,43 @@ public class MapActivity extends FragmentActivity implements OnMarkerClickListen
 	}
 
 	public void onCameraChange(final CameraPosition position) {
-		double latitude = position.target.latitude;
-		double longitude = position.target.longitude;
-		_latitude = Double.toString(latitude);
-		_longitude = Double.toString(longitude);
-		if(!(bikeHttpGetAsyncTask.getStatus() == AsyncTask.Status.FINISHED)){
-			System.out.println("Pending Http Request Canceled");
-			bikeHttpGetAsyncTask.cancel(true);
+		double newLatitude = position.target.latitude;
+		double newLongitude = position.target.longitude;
+		double dist = distFrom(newLatitude, newLongitude, Double.parseDouble(_latitude), Double.parseDouble(_longitude));
+		System.out.println(dist);
+		if(dist > 1000){
+			_latitude = Double.toString(newLatitude);	
+			_longitude = Double.toString(newLongitude);
+			if(!(bikeHttpGetAsyncTask.getStatus() == AsyncTask.Status.FINISHED)){
+				System.out.println("Pending Http Request Canceled");
+				bikeHttpGetAsyncTask.cancel(true);
+			}
+			if(!(busStopHttpGetAsyncTask.getStatus() == AsyncTask.Status.FINISHED)){
+				busStopHttpGetAsyncTask.cancel(true);
+			}
+			bikeHttpGetAsyncTask = new BikeHttpGetAsyncTask();
+			bikeHttpGetAsyncTask.execute(_latitude, _longitude, RADIUS);
+			busStopHttpGetAsyncTask = new BusStopHttpGetAsyncTask();
+			busStopHttpGetAsyncTask.execute(_latitude, _longitude, RADIUS);
+			tubeGetAsyncTask = new QueryTubeStationAsyncTask();
+			tubeGetAsyncTask.execute(_latitude, _longitude);
 		}
-		if(!(busStopHttpGetAsyncTask.getStatus() == AsyncTask.Status.FINISHED)){
-			busStopHttpGetAsyncTask.cancel(true);
-		}
-		bikeHttpGetAsyncTask = new BikeHttpGetAsyncTask();
-		bikeHttpGetAsyncTask.execute(_latitude, _longitude, RADIUS);
-		busStopHttpGetAsyncTask = new BusStopHttpGetAsyncTask();
-		busStopHttpGetAsyncTask.execute(_latitude, _longitude, RADIUS);
-		tubeGetAsyncTask = new QueryTubeStationAsyncTask();
-		tubeGetAsyncTask.execute(_latitude, _longitude);
 	}
 
+	private static double distFrom(double lat1, double lng1, double lat2, double lng2) {
+	    double earthRadius = 6371000;
+	    double dLat = Math.toRadians(lat2-lat1);
+	    double dLng = Math.toRadians(lng2-lng1);
+	    double sindLat = Math.sin(dLat / 2);
+	    double sindLng = Math.sin(dLng / 2);
+	    double a = Math.pow(sindLat, 2) + Math.pow(sindLng, 2)
+	            * Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2));
+	    double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+	    double dist = earthRadius * c;
+
+	    return dist;
+	    }
+	
 	private Location getCurrentLocation() {
 
 		Location newLocation;
@@ -474,15 +483,15 @@ public class MapActivity extends FragmentActivity implements OnMarkerClickListen
 
 		@Override
 		protected void onPostExecute(String result) {
-			//			TextView weatherDescTextView = (TextView) findViewById(R.id.weather_desc);
-			//			weatherDescTextView.setText(weatherDesc);
-
 			ImageView weatherIconImageView = (ImageView) findViewById(R.id.weather_icon);
 			weatherIconImageView.setImageDrawable(weatherIcon);
 			weatherIconImageView.setOnClickListener(new OnClickListener(){
 				@Override
 				public void onClick(View v) {
-					Toast.makeText(getApplicationContext(), "Today's weather forecast: " + "\n" +  temperature + "¡ÆC, "  + weatherDesc, Toast.LENGTH_LONG).show();
+					Toast toast = Toast.makeText(getApplicationContext(), "Today's weather forecast: " + "\n" +  temperature + "\u00B0" + ", "  + weatherDesc, Toast.LENGTH_LONG);
+					toast.setGravity(Gravity.TOP, 0, 0);
+					toast.show();
+
 				}
 			});
 		}
