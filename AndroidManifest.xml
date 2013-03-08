@@ -80,7 +80,8 @@
         </activity>
         <activity
             android:name="com.travelsmartlondon.TubeLineActivity"
-            android:label="@string/title_activity_tube_line" >
+            android:label="@string/title_activity_tube_line"
+            android:screenOrientation="portrait">
         </activity>
     </application>
 

@@ -63,6 +63,9 @@ public class TSLApplicationContext {
 	}
 	
 	public boolean lineIsRated(String line_) {
+		if(this._ratings == null) { 
+			return false;
+		}
 		if(this._ratings.get(line_).equals((float) -1.0)) {
 			return false;
 		} else {
