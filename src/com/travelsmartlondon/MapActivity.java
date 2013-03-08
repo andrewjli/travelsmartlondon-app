@@ -73,7 +73,7 @@ public class MapActivity extends FragmentActivity implements OnMarkerClickListen
 	public static final String STATION_NLC = "com.travelsmartlondon.STATION_NLC";
 	public static final String CURRENT_TIME = "com.travelsmart.CURRENT_TIME";
 	public static final String TUBE_NAME="com.travelsmart.TUBE_NAME";
-	private static final int DIALOG_ALERT = 10;
+	private static final int TAP_STATION = 10;
 	private static final String RADIUS = "1500";
 
 	ToggleButton busToggle;
@@ -233,11 +233,11 @@ public class MapActivity extends FragmentActivity implements OnMarkerClickListen
 		if(dist > 1000){
 			_latitude = Double.toString(newLatitude);	
 			_longitude = Double.toString(newLongitude);
-			if(!(bikeHttpGetAsyncTask.getStatus() == AsyncTask.Status.FINISHED)){
+			if(bikeHttpGetAsyncTask.getStatus() != AsyncTask.Status.FINISHED){
 				System.out.println("Pending Http Request Canceled");
 				bikeHttpGetAsyncTask.cancel(true);
 			}
-			if(!(busStopHttpGetAsyncTask.getStatus() == AsyncTask.Status.FINISHED)){
+			if(busStopHttpGetAsyncTask.getStatus() != AsyncTask.Status.FINISHED){
 				busStopHttpGetAsyncTask.cancel(true);
 			}
 			bikeHttpGetAsyncTask = new BikeHttpGetAsyncTask();
@@ -368,7 +368,7 @@ public class MapActivity extends FragmentActivity implements OnMarkerClickListen
 
 		if(tubeList.containsKey(marker)){
 			setTempMarker(marker);
-			showDialog(DIALOG_ALERT);
+			showDialog(TAP_STATION);
 		}else{
 			marker.showInfoWindow();
 		}
@@ -378,7 +378,7 @@ public class MapActivity extends FragmentActivity implements OnMarkerClickListen
 	protected Dialog onCreateDialog(int id){
 		final CharSequence[] i = {"Show arrivals","Show smart data"};
 		switch (id){
-		case DIALOG_ALERT:
+		case TAP_STATION:
 			Builder builder = new AlertDialog.Builder(this);
 			builder.setItems(i, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int which) {
@@ -488,7 +488,7 @@ public class MapActivity extends FragmentActivity implements OnMarkerClickListen
 			weatherIconImageView.setOnClickListener(new OnClickListener(){
 				@Override
 				public void onClick(View v) {
-					Toast toast = Toast.makeText(getApplicationContext(), "Today's weather forecast: " + "\n" +  temperature + "\u00B0" + ", "  + weatherDesc, Toast.LENGTH_LONG);
+					Toast toast = Toast.makeText(getApplicationContext(), "Today's weather forecast: " + "\n" +  temperature + "\u00B0" + "C, "  + weatherDesc, Toast.LENGTH_LONG);
 					toast.setGravity(Gravity.TOP, 0, 0);
 					toast.show();
 

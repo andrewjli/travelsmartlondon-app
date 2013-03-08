@@ -100,4 +100,5 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_tube_line">TubeLineActivity</string>
     <string name="rate_button">RATE</string>
+
 </resources>
