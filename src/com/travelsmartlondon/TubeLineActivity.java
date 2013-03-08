@@ -494,8 +494,16 @@ public class TubeLineActivity extends ListActivity {
 					builder.setTitle("Status details");
 					TextView textView = (TextView) list.findViewById(R.id.line_name_text);
 					String line = textView.getText().toString();
+					
+					LayoutInflater inflater = TubeLineActivity.this.getLayoutInflater();
+					
+					LinearLayout localLayout = (LinearLayout) inflater.inflate(R.layout.status_details_dialog, null);
+					TextView rating = (TextView) localLayout.findViewById(R.id.status_detail_message);
+					rating.setText(_lineStatusDetails.get(line));
+					
 					if(_lineStatusDetails.containsKey(line)) {
-						builder.setTitle(_lineStatusDetails.get(line)); 
+						builder.setTitle("Status details for " + line + " line:"); 
+						builder.setView(localLayout);
 					} else {
 						builder.setTitle("Error occured. Line status unavailable");
 					}
