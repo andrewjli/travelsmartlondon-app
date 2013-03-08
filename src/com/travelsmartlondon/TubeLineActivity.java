@@ -66,6 +66,7 @@ public class TubeLineActivity extends ListActivity {
 	public static final URI LINES_TSL_URI = URI.create("http://stud-tfl.cs.ucl.ac.uk/lines");
 	public static final URI RATING_TSL_URI = URI.create("http://stud-tfl.cs.ucl.ac.uk/getratings?fetchall");
 	public static final String POST_RATING_UPDATE_TSL_BASE_URI_STRING =  "http://stud-tfl.cs.ucl.ac.uk/postratings?";
+	public static final String GET_OWN_RATINGS = "http://stud-tfl.cs.ucl.ac.uk/getratings?fetchforuser=";
 	
 	public static final String MAP_LINE = "Line";
 	public static final String MAP_STATUS = "Status";

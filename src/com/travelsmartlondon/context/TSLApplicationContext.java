@@ -1,12 +1,11 @@
 package com.travelsmartlondon.context;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import com.travelsmartlondon.TubeLineActivity;
-
-import android.content.Context;
-import android.content.SharedPreferences;
 
 /**
  * TSLApplicationContext singleton context object.
@@ -47,6 +46,10 @@ public class TSLApplicationContext {
 		return INSTANCE;
 	}
 	
+	/**
+	 * This is for presentation purposes only and should not be sent to the outside world
+	 * @return emailAddress
+	 */
 	public String currentEmailAddress() {
 		return this._emailAddress;
 	}
@@ -73,5 +76,29 @@ public class TSLApplicationContext {
 	
 	public Float fetchOwnRatingForLine(String line_) throws IllegalArgumentException {
 		return (this._ratings.get(line_));
+	}
+	
+	public String currentSHA1EmailAddress() {
+		return toSHA1(this._emailAddress.getBytes());
+	}
+	
+	public static String toSHA1(byte[] convertme) {
+	    MessageDigest md = null;
+	    try {
+	        md = MessageDigest.getInstance("SHA-1");
+	    }
+	    catch(NoSuchAlgorithmException e) {
+	        e.printStackTrace();
+	    } 
+	    return byteArrayToHexString(md.digest(convertme));
+	}
+	
+	private static String byteArrayToHexString(byte[] b) {
+		  String result = "";
+		  for (int i=0; i < b.length; i++) {
+		    result +=
+		          Integer.toString( ( b[i] & 0xff ) + 0x100, 16).substring( 1 );
+		  }
+		  return result;
 	}
 }
