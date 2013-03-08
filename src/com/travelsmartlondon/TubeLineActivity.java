@@ -62,10 +62,11 @@ public class TubeLineActivity extends ListActivity {
 	public static final String NORTHERN_LINE = "Northern";
 	public static final String DLR_LINE = "DLR";
 	public static final String OVERGROUND_LINE = "Overground";
+	public static final String RATING_STRING_NULL = "null";
 	
 	public static final URI LINES_TSL_URI = URI.create("http://stud-tfl.cs.ucl.ac.uk/lines");
 	public static final URI RATING_TSL_URI = URI.create("http://stud-tfl.cs.ucl.ac.uk/getratings?fetchall");
-	public static final String POST_RATING_UPDATE_TSL_BASE_URI_STRING =  "http://stud-tfl.cs.ucl.ac.uk/postratings?";
+	public static final String POST_RATING_UPDATE_TSL_BASE_URI_STRING =  "http://stud-tfl.cs.ucl.ac.uk/postratings?foruser=";
 	public static final String GET_OWN_RATINGS = "http://stud-tfl.cs.ucl.ac.uk/getratings?fetchforuser=";
 	
 	public static final String MAP_LINE = "Line";
@@ -184,8 +185,9 @@ public class TubeLineActivity extends ListActivity {
 			
 			int rating = (int) Math.ceil(Float.parseFloat(params[1]));
 			String line = params[0].replace(" ","_");
+			String userName = params[2];
 			
-			HttpGet httpPostRatingByHttpGet = new HttpGet(POST_RATING_UPDATE_TSL_BASE_URI_STRING + line + "=" + rating);
+			HttpGet httpPostRatingByHttpGet = new HttpGet(POST_RATING_UPDATE_TSL_BASE_URI_STRING + userName+ "," + line + "=" + rating);
 			
 			try {
 				HttpResponse httpResponse = httpClient.execute(httpPostRatingByHttpGet);
@@ -251,15 +253,28 @@ public class TubeLineActivity extends ListActivity {
 			    	
 			    	reader = new BufferedReader(new InputStreamReader(httpResponseRating.getEntity().getContent(), "UTF-8"));
 			    	String jsonRating = reader.readLine();
-			    	reader.close();
 			    	
 				    JSONArray jsonArrayStatus = new JSONArray(jsonStatus);
 				    JSONArray jsonArrayRatings = new JSONArray(jsonRating);
+				    
+				    if(_isLoggedIn) { 
+				    	String userName = TSLApplicationContext.getInstance().currentSHA1EmailAddress();
+						HttpGet httpGetOwnRating = new HttpGet(GET_OWN_RATINGS + userName); 
+						HttpResponse httpResponseOwnRating = httpClient.execute(httpGetOwnRating);
+						reader = new BufferedReader(new InputStreamReader(httpResponseOwnRating.getEntity().getContent(), "UTF-8"));
+				    	String jsonOwnRating = reader.readLine();
+						JSONObject jsonObjectOwnRatings = new JSONObject(jsonOwnRating);
+						updateRatings(jsonObjectOwnRatings);
+					}
+				    
+				    reader.close();
 				    
 				    List<JSONObject> list = new ArrayList<JSONObject>();
 				    for(int i = 0; i < jsonArrayRatings.length(); i ++) {
 				    	list.add(jsonArrayRatings.getJSONObject(i));
 				    }
+				    
+				    
 				    
 				    _ratings = calculateRating(list, true);
 				    _numberOfRatingsPerLine = mapStringFloatToMapStringInt(calculateRating(list, false));
@@ -345,6 +360,89 @@ public class TubeLineActivity extends ListActivity {
 				npe.printStackTrace();
 			}
 			return null;
+		}
+
+		private void updateRatings(JSONObject jsonOwnRatingObject_) throws JSONException {
+			
+	    	String piccadilly = jsonOwnRatingObject_.getString(PICCADILLY_LINE);
+	    	String district = jsonOwnRatingObject_.getString(DISTRICT_LINE);
+	    	String victoria = jsonOwnRatingObject_.getString(VICTORIA_LINE);
+	    	String circle = jsonOwnRatingObject_.getString(CIRCLE_LINE);
+	    	String hammmersmith = jsonOwnRatingObject_.getString(HAMMERSMITH_CITY_LINE.replace(" ", "_"));
+	    	String bakerloo = jsonOwnRatingObject_.getString(BAKERLOO_LINE);
+	    	String waterloo = jsonOwnRatingObject_.getString(WATERLOO_CITY_LINE.replace(" ", "_"));
+	    	String central = jsonOwnRatingObject_.getString(CENTRAL_LINE);
+	    	String jubilee = jsonOwnRatingObject_.getString(JUBILEE_LINE);
+	    	String metropolitan = jsonOwnRatingObject_.getString(METROPOLITAN_LINE);
+	    	String northern = jsonOwnRatingObject_.getString(NORTHERN_LINE);
+	    	String dlr = jsonOwnRatingObject_.getString(DLR_LINE);
+	    	String overground = jsonOwnRatingObject_.getString(OVERGROUND_LINE);
+	    	
+	    	if(piccadilly.equals(RATING_STRING_NULL)) {
+	    		TSLApplicationContext.getInstance().setRatingForLineToNull(PICCADILLY_LINE);
+	    	} else {
+	    		TSLApplicationContext.getInstance().submitRatingForLine(PICCADILLY_LINE, piccadilly);
+	    	}
+	    	if(district.equals(RATING_STRING_NULL)) {
+	    		TSLApplicationContext.getInstance().setRatingForLineToNull(DISTRICT_LINE);
+	    	} else {
+	    		TSLApplicationContext.getInstance().submitRatingForLine(DISTRICT_LINE, district);
+	    	}
+	    	if(victoria.equals(RATING_STRING_NULL)) {
+	    		TSLApplicationContext.getInstance().setRatingForLineToNull(VICTORIA_LINE);
+	    	} else {
+	    		TSLApplicationContext.getInstance().submitRatingForLine(VICTORIA_LINE, victoria);
+	    	}
+	    	if(circle.equals(RATING_STRING_NULL)) {
+	    		TSLApplicationContext.getInstance().setRatingForLineToNull(CIRCLE_LINE);
+	    	} else {
+	    		TSLApplicationContext.getInstance().submitRatingForLine(CIRCLE_LINE, circle);
+	    	}
+	    	if(hammmersmith.equals(RATING_STRING_NULL)) {
+	    		TSLApplicationContext.getInstance().setRatingForLineToNull(HAMMERSMITH_CITY_LINE);
+	    	} else {
+	    		TSLApplicationContext.getInstance().submitRatingForLine(HAMMERSMITH_CITY_LINE, hammmersmith);
+	    	}
+	    	if(bakerloo.equals(RATING_STRING_NULL)) {
+	    		TSLApplicationContext.getInstance().setRatingForLineToNull(BAKERLOO_LINE);
+	    	} else {
+	    		TSLApplicationContext.getInstance().submitRatingForLine(BAKERLOO_LINE, bakerloo);
+	    	}
+	    	if(waterloo.equals(RATING_STRING_NULL)) {
+	    		TSLApplicationContext.getInstance().setRatingForLineToNull(WATERLOO_CITY_LINE);
+	    	} else {
+	    		TSLApplicationContext.getInstance().submitRatingForLine(WATERLOO_CITY_LINE, waterloo);
+	    	}
+	    	if(central.equals(RATING_STRING_NULL)) {
+	    		TSLApplicationContext.getInstance().setRatingForLineToNull(CENTRAL_LINE);
+	    	} else {
+	    		TSLApplicationContext.getInstance().submitRatingForLine(CENTRAL_LINE, central);
+	    	}
+	    	if(jubilee.equals(RATING_STRING_NULL)) {
+	    		TSLApplicationContext.getInstance().setRatingForLineToNull(JUBILEE_LINE);
+	    	} else {
+	    		TSLApplicationContext.getInstance().submitRatingForLine(JUBILEE_LINE, jubilee);
+	    	}
+	    	if(metropolitan.equals(RATING_STRING_NULL)) {
+	    		TSLApplicationContext.getInstance().setRatingForLineToNull(METROPOLITAN_LINE);
+	    	} else {
+	    		TSLApplicationContext.getInstance().submitRatingForLine(METROPOLITAN_LINE, metropolitan);
+	    	}
+	    	if(northern.equals(RATING_STRING_NULL)) {
+	    		TSLApplicationContext.getInstance().setRatingForLineToNull(NORTHERN_LINE);
+	    	} else {
+	    		TSLApplicationContext.getInstance().submitRatingForLine(NORTHERN_LINE, northern);
+	    	}
+	    	if(dlr.equals(RATING_STRING_NULL)) {
+	    		TSLApplicationContext.getInstance().setRatingForLineToNull(DLR_LINE);
+	    	} else {
+	    		TSLApplicationContext.getInstance().submitRatingForLine(DLR_LINE, dlr);
+	    	}
+	    	if(overground.equals(RATING_STRING_NULL)) {
+	    		TSLApplicationContext.getInstance().setRatingForLineToNull(OVERGROUND_LINE);
+	    	} else {
+	    		TSLApplicationContext.getInstance().submitRatingForLine(OVERGROUND_LINE, overground);
+	    	}
 		}
 
 		@Override
@@ -441,7 +539,7 @@ public class TubeLineActivity extends ListActivity {
 						               public void onClick(DialogInterface dialog, int id) {
 						            	   AsyncTask<String, Void, Void> httpGetTask = new PostRatingHttpAsyncTask();
 						            	   String stringFloatRating = (new Float(rating.getRating())).toString();
-						           		   httpGetTask.execute(line, stringFloatRating); 
+						           		   httpGetTask.execute(line, stringFloatRating, TSLApplicationContext.getInstance().currentSHA1EmailAddress()); 
 						            	   _ratings.put(line, rating.getRating());
 						            	   
 						            	   TextView users = (TextView) lowerLayout.findViewById(R.id.number_info_text);

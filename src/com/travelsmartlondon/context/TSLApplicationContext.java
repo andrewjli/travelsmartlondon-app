@@ -74,6 +74,15 @@ public class TSLApplicationContext {
 		this._ratings.put(line_, rating_);
 	}
 	
+	public void submitRatingForLine(String line_, String rating_) throws IllegalArgumentException {
+		Float rating = Float.parseFloat(rating_);
+		this._ratings.put(line_, rating);
+	}
+	
+	public void setRatingForLineToNull(String line_) throws IllegalArgumentException {
+		this._ratings.put(line_, (float) -1.0);
+	}
+	
 	public Float fetchOwnRatingForLine(String line_) throws IllegalArgumentException {
 		return (this._ratings.get(line_));
 	}
