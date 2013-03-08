@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <string name="app_name">TSL</string>
     <string name="menu_settings">Settings</string>
     <string name="title_activity_results">Bus Countdown</string>
@@ -100,4 +101,5 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_tube_line">TubeLineActivity</string>
     <string name="rate_button">RATE</string>
+
 </resources>
