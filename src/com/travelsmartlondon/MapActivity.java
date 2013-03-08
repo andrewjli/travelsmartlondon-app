@@ -488,11 +488,7 @@ public class MapActivity extends FragmentActivity implements OnMarkerClickListen
 			weatherIconImageView.setOnClickListener(new OnClickListener(){
 				@Override
 				public void onClick(View v) {
-<<<<<<< HEAD
 					Toast toast = Toast.makeText(getApplicationContext(), "Today's weather forecast: " + "\n" +  temperature + "\u00B0" + "C, "  + weatherDesc, Toast.LENGTH_LONG);
-=======
-					Toast toast = Toast.makeText(getApplicationContext(), "Today's weather forecast: " + "\n" +  temperature + "\u00B0" + ", "  + weatherDesc, Toast.LENGTH_LONG);
->>>>>>> Improved refresh rate
 					toast.setGravity(Gravity.TOP, 0, 0);
 					toast.show();
 
