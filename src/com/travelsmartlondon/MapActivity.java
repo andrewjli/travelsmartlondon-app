@@ -633,6 +633,9 @@ public class MapActivity extends FragmentActivity implements OnMarkerClickListen
 
 		@Override
 		protected void onPostExecute(String result) {
+			for(Marker marker : tubeMarkerList) {
+				marker.remove();
+			}
 			if(_stationsInArea != null) {
 				for(TubeStation station : _stationsInArea) {
 					addMarker(station, map);
