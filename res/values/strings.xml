@@ -10,7 +10,7 @@
     <string name="title_activity_crowdedness">CrowdednessActivity</string>
 
     <string-array name="time">
-        <item>Select time</item>
+        <item>Time</item>
         <item>05:00</item>
         <item>05:15</item>
         <item>05:30</item>

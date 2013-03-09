@@ -84,7 +84,7 @@ public class CrowdednessActivity extends Activity {
 					int pos, long id) {
 				
 				String timeToQuery = parent.getItemAtPosition(pos).toString();
-				if(!timeToQuery.equals("Select time")){
+				if(!timeToQuery.equals("Time")){
 					timeToQuery = timeToQuery.substring(0, 2)+timeToQuery.substring(3, 5);
 					
 					HttpGetAsyncTask asyncTask = new HttpGetAsyncTask();

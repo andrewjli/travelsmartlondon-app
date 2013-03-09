@@ -7,86 +7,84 @@
     <LinearLayout
         android:id="@+id/crowdednessBar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        
-        <TextView
-        android:id="@+id/crowdednessLabel"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:paddingLeft="10dp"
-        android:text="Expected crowdedness for"
-        android:textColor="#BBFFFF"
-        android:textSize="15sp" 
-        android:layout_weight="1"/>
+        android:layout_height="wrap_content" >
 
-    <TextView
-        android:id="@+id/crowdTime"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="14:23"
-        android:textColor="#BBFFFF"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:layout_weight="2"/>
-         </LinearLayout>
-         
+        <TextView
+            android:id="@+id/crowdednessLabel"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:paddingLeft="10dp"
+            android:text="Expected crowdedness for"
+            android:textColor="#BBFFFF"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/crowdTime"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:text="14:23"
+            android:textColor="#BBFFFF"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
     <TextView
         android:id="@+id/crowdednessLevel"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="crowded"
+        android:layout_below="@+id/crowdednessBar"
         android:paddingLeft="10dp"
-        android:textStyle="bold"
-        android:textSize="20sp" 
-        android:layout_below="@+id/crowdednessBar" />
-   
+        android:text="crowded"
+        android:textSize="20sp"
+        android:textStyle="bold" />
 
     <LinearLayout
         android:id="@+id/crowdimages"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/crowdednessLevel">
+        android:layout_below="@+id/crowdednessLevel" >
 
         <ImageView
             android:id="@+id/imageview1"
             android:layout_width="110dp"
             android:layout_height="110dp"
-            android:layout_weight="1" 
+            android:layout_weight="1"
             android:src="@drawable/crowdednesswatermark"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
         <ImageView
             android:id="@+id/imageview2"
             android:layout_width="110dp"
             android:layout_height="110dp"
             android:layout_weight="1"
-            android:src="@drawable/crowdednesswatermark" 
-            android:visibility="gone"/>
+            android:src="@drawable/crowdednesswatermark"
+            android:visibility="gone" />
 
         <ImageView
             android:id="@+id/imageview3"
             android:layout_width="110dp"
             android:layout_height="110dp"
-            android:layout_weight="1" 
+            android:layout_weight="1"
             android:src="@drawable/crowdednesswatermark"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
         <ImageView
             android:id="@+id/imageview4"
             android:layout_width="110dp"
             android:layout_height="110dp"
-            android:layout_weight="1" 
+            android:layout_weight="1"
             android:src="@drawable/crowdednesswatermark"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
         <ImageView
             android:id="@+id/imageview5"
             android:layout_width="110dp"
             android:layout_height="110dp"
-            android:layout_weight="1" 
+            android:layout_weight="1"
             android:src="@drawable/crowdednesswatermark"
-            android:visibility="gone"/>
-        
+            android:visibility="gone" />
     </LinearLayout>
 
     <LinearLayout
@@ -95,22 +93,22 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/crowdimages" >
 
-
         <TextView
             android:id="@+id/TimeSelection"
-            android:layout_width="fill_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="14dp"
+            android:layout_weight="5"
             android:gravity="left"
-            android:text="Select different time:"
             android:paddingLeft="10dp"
-            android:layout_weight="1"
+            android:text="Select different time:"
             android:textSize="18sp" />
-        
+
         <Spinner
             android:id="@+id/spinner1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:gravity="fill"
             android:layout_weight="1" />
     </LinearLayout>
 
@@ -120,17 +118,17 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/timepicker_crowdedness"
         android:layout_marginTop="14dp"
+        android:background="@color/twitter_background"
         android:gravity="left"
         android:paddingRight="10dp"
         android:text="What users are saying:"
-        android:textSize="30sp" 
-        android:background="@color/twitter_background" />
+        android:textSize="30sp" />
 
     <LinearLayout
         android:id="@+id/twitter1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/twittersection">
+        android:layout_below="@+id/twittersection" >
 
         <ImageView
             android:id="@+id/imageview5"
