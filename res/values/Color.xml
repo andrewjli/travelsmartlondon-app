@@ -1,3 +1,4 @@
 <resources>
    <color name="twitter_background">#FFF0F5</color>
+   <color name="comment_text">#000000</color>
 </resources>
