@@ -8,6 +8,7 @@
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="title_activity_crowdedness">CrowdednessActivity</string>
+    <string name="comments_no_items">No Comments to be displayed</string>
 
     <string-array name="time">
         <item>Time</item>

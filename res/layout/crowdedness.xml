@@ -24,7 +24,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_weight="2"
-            android:text="14:23"
+            android:text=""
             android:textColor="#BBFFFF"
             android:textSize="20sp"
             android:textStyle="bold" />
@@ -44,6 +44,7 @@
         android:id="@+id/crowdimages"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="0dp"
         android:layout_below="@+id/crowdednessLevel" >
 
         <ImageView
@@ -91,6 +92,8 @@
         android:id="@+id/timepicker_crowdedness"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="0dp"
         android:layout_below="@+id/crowdimages" >
 
         <TextView
@@ -101,117 +104,44 @@
             android:layout_weight="5"
             android:gravity="left"
             android:paddingLeft="10dp"
+            android:textAlignment="center"
             android:text="Select different time:"
-            android:textSize="18sp" />
+            android:textSize="19sp"/>
 
         <Spinner
             android:id="@+id/spinner1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="fill"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:gravity="fill" />
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/twittersection"
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="fill_parent"
+        android:orientation="vertical"
         android:layout_below="@+id/timepicker_crowdedness"
-        android:layout_marginTop="14dp"
-        android:background="@color/twitter_background"
-        android:gravity="left"
-        android:paddingRight="10dp"
-        android:text="What users are saying:"
-        android:textSize="30sp" />
+        android:layout_above="@+id/give_comment_comment">
 
-    <LinearLayout
-        android:id="@+id/twitter1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/twittersection" >
-
-        <ImageView
-            android:id="@+id/imageview5"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_weight="2"
-            android:src="@drawable/twitbird" />
+        <ListView
+            android:id="@+id/android:list"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"/>
 
         <TextView
-            android:id="@+id/twittersection"
+            android:id="@+id/android:empty"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/timepicker_crowdedness"
-            android:layout_marginTop="14dp"
-            android:layout_weight="2"
-            android:gravity="left"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:text="Euston is sooooo busy right now!!!!"
-            android:textSize="20sp" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/twitter2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/twitter1" >
-
-        <ImageView
-            android:id="@+id/imageview5"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_weight="2"
-            android:src="@drawable/twitbird" />
-
-        <TextView
-            android:id="@+id/twittersection"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/timepicker_crowdedness"
-            android:layout_marginTop="14dp"
-            android:layout_weight="2"
-            android:gravity="left"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:text="Euston is so bad at this time!!! Too many people"
-            android:textSize="20sp" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/twitter3"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/twitter2" >
-
-        <ImageView
-            android:id="@+id/imageview5"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_weight="2"
-            android:src="@drawable/twitbird" />
-
-        <TextView
-            android:id="@+id/twittersection"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/timepicker_crowdedness"
-            android:layout_marginTop="14dp"
-            android:layout_weight="2"
-            android:gravity="left"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:text="Just missed my train!!!! so crowded :("
-            android:textSize="20sp" />
-    </LinearLayout>
+            android:layout_height="fill_parent"
+            android:text="@string/comments_no_items" />
+        </LinearLayout>
 
     <Button
-        android:layout_width="wrap_content"
+        android:id="@+id/give_comment_comment"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
         android:gravity="center"
-        android:onClick="selfDestruct"
         android:text="Give your comment now" />
 
 </RelativeLayout>
