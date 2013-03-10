@@ -94,7 +94,7 @@ public class TSLApplicationContext {
 		return toSHA1(this._emailAddress.getBytes());
 	}
 	
-	public static String toSHA1(byte[] convertme) {
+	private static String toSHA1(byte[] convertme) {
 	    MessageDigest md = null;
 	    try {
 	        md = MessageDigest.getInstance("SHA-1");
