@@ -104,7 +104,6 @@
             android:layout_weight="5"
             android:gravity="left"
             android:paddingLeft="10dp"
-            android:textAlignment="center"
             android:text="Select different time:"
             android:textSize="19sp"/>
 
@@ -117,7 +116,6 @@
     </LinearLayout>
 
     <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:orientation="vertical"
