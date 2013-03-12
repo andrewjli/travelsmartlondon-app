@@ -520,13 +520,13 @@ public class TubeLineActivity extends ListActivity {
 			
 			list.setOnClickListener(listener);
 			
-			final LinearLayout ratingLayout = (LinearLayout) view.findViewById(R.id.rating_layout);
-			final LinearLayout lowerLayout = (LinearLayout) view.findViewById(R.id.number_info_layout);
+			final LinearLayout buttonLayout = (LinearLayout) view.findViewById(R.id.rating_layout);
+			final LinearLayout rateLayout = (LinearLayout) view.findViewById(R.id.number_info_layout);
 			
 			boolean rated = TSLApplicationContext.getInstance().lineIsRated(line);
 			
 			if(_isLoggedIn && !rated) {
-				final Button button = (Button) ratingLayout.findViewById(R.id.rate_button);
+				final Button button = (Button) buttonLayout.findViewById(R.id.rate_button);
 				final int position = position_;
 				if(button != null) {
 					button.setOnClickListener(new View.OnClickListener() {
@@ -550,10 +550,10 @@ public class TubeLineActivity extends ListActivity {
 						           		   httpGetTask.execute(line, stringFloatRating, TSLApplicationContext.getInstance().currentSHA1EmailAddress()); 
 						            	   _ratings.put(line, rating.getRating());
 						            	   
-						            	   TextView users = (TextView) lowerLayout.findViewById(R.id.number_info_text);
+						            	   TextView users = (TextView) rateLayout.findViewById(R.id.number_info_text);
 						            	   users.setText("You just rated " + line + " line with " + rating.getRating());
 						            	   
-						            	   RatingBar temporaryRatingBar = (RatingBar) ratingLayout.findViewById(R.id.rating_bar);
+						            	   RatingBar temporaryRatingBar = (RatingBar) rateLayout.findViewById(R.id.rating_bar);
 						            	   temporaryRatingBar.setRating(rating.getRating());
 						            	   
 						            	   button.setVisibility(View.GONE);
@@ -576,18 +576,18 @@ public class TubeLineActivity extends ListActivity {
 				}
 				
 			} else if(_isLoggedIn) {
-				RatingBar resultRating = (RatingBar) ratingLayout.findViewById(R.id.rating_bar);
+				RatingBar resultRating = (RatingBar) rateLayout.findViewById(R.id.rating_bar);
 				resultRating.setRating(_ratings.get(line));
 			}
 			
 			if(line.equals(PICCADILLY_LINE)) {
 				view.setBackgroundResource(R.drawable.gradient_piccadilly);
 				if(_isLoggedIn) {
-					RatingBar resultRating = (RatingBar) ratingLayout.findViewById(R.id.rating_bar);
+					RatingBar resultRating = (RatingBar) rateLayout.findViewById(R.id.rating_bar);
 	            	resultRating.setRating(_ratings.get(PICCADILLY_LINE));
-	            	TextView users = (TextView) lowerLayout.findViewById(R.id.number_info_text);
+	            	TextView users = (TextView) rateLayout.findViewById(R.id.number_info_text);
 	            	setNumberOfUSersInTextView(users, _numberOfRatingsPerLine.get(line));
-	            	Button button = (Button) ratingLayout.findViewById(R.id.rate_button); 
+	            	Button button = (Button) buttonLayout.findViewById(R.id.rate_button); 
 	            	if(rated) {
 	            		button.setVisibility(View.GONE);
 	            	} else {
@@ -597,11 +597,11 @@ public class TubeLineActivity extends ListActivity {
 			} else if(line.equals(DISTRICT_LINE)) {
 				view.setBackgroundResource(R.drawable.gradient_district);
 				if(_isLoggedIn) {
-					RatingBar resultRating = (RatingBar) ratingLayout.findViewById(R.id.rating_bar);
+					RatingBar resultRating = (RatingBar) rateLayout.findViewById(R.id.rating_bar);
 	            	resultRating.setRating(_ratings.get(DISTRICT_LINE));
-	            	TextView users = (TextView) lowerLayout.findViewById(R.id.number_info_text);
+	            	TextView users = (TextView) rateLayout.findViewById(R.id.number_info_text);
 	            	setNumberOfUSersInTextView(users, _numberOfRatingsPerLine.get(line));
-	            	Button button = (Button) ratingLayout.findViewById(R.id.rate_button); 
+	            	Button button = (Button) buttonLayout.findViewById(R.id.rate_button); 
 	            	if(rated) {
 	            		button.setVisibility(View.GONE);
 	            	} else {
@@ -611,11 +611,11 @@ public class TubeLineActivity extends ListActivity {
 			} else if(line.equals(VICTORIA_LINE)) {
 				view.setBackgroundResource(R.drawable.gradient_victoria);
 				if(_isLoggedIn) {
-					RatingBar resultRating = (RatingBar) ratingLayout.findViewById(R.id.rating_bar);
+					RatingBar resultRating = (RatingBar) rateLayout.findViewById(R.id.rating_bar);
 	            	resultRating.setRating(_ratings.get(VICTORIA_LINE));
-	            	TextView users = (TextView) lowerLayout.findViewById(R.id.number_info_text);
+	            	TextView users = (TextView) rateLayout.findViewById(R.id.number_info_text);
 	            	setNumberOfUSersInTextView(users, _numberOfRatingsPerLine.get(line));
-	            	Button button = (Button) ratingLayout.findViewById(R.id.rate_button); 
+	            	Button button = (Button) buttonLayout.findViewById(R.id.rate_button); 
 	            	if(rated) {
 	            		button.setVisibility(View.GONE);
 	            	} else {
@@ -625,11 +625,11 @@ public class TubeLineActivity extends ListActivity {
 			} else if(line.equals(CIRCLE_LINE)) {
 				view.setBackgroundResource(R.drawable.gradient_circle);
 				if(_isLoggedIn) {
-					RatingBar resultRating = (RatingBar) ratingLayout.findViewById(R.id.rating_bar);
+					RatingBar resultRating = (RatingBar) rateLayout.findViewById(R.id.rating_bar);
 	            	resultRating.setRating(_ratings.get(CIRCLE_LINE));
-	            	TextView users = (TextView) lowerLayout.findViewById(R.id.number_info_text);
+	            	TextView users = (TextView) rateLayout.findViewById(R.id.number_info_text);
 	            	setNumberOfUSersInTextView(users, _numberOfRatingsPerLine.get(line));
-	            	Button button = (Button) ratingLayout.findViewById(R.id.rate_button); 
+	            	Button button = (Button) buttonLayout.findViewById(R.id.rate_button); 
 	            	if(rated) {
 	            		button.setVisibility(View.GONE);
 	            	} else {
@@ -639,11 +639,11 @@ public class TubeLineActivity extends ListActivity {
 			} else if(line.equals(HAMMERSMITH_CITY_LINE)) {
 				view.setBackgroundResource(R.drawable.gradient_hammersmith);
 				if(_isLoggedIn) {
-					RatingBar resultRating = (RatingBar) ratingLayout.findViewById(R.id.rating_bar);
+					RatingBar resultRating = (RatingBar) rateLayout.findViewById(R.id.rating_bar);
 	            	resultRating.setRating(_ratings.get(HAMMERSMITH_CITY_LINE));
-	            	TextView users = (TextView) lowerLayout.findViewById(R.id.number_info_text);
+	            	TextView users = (TextView) rateLayout.findViewById(R.id.number_info_text);
 	            	setNumberOfUSersInTextView(users, _numberOfRatingsPerLine.get(line));
-	            	Button button = (Button) ratingLayout.findViewById(R.id.rate_button); 
+	            	Button button = (Button) buttonLayout.findViewById(R.id.rate_button); 
 	            	if(rated) {
 	            		button.setVisibility(View.GONE);
 	            	} else {
@@ -653,11 +653,11 @@ public class TubeLineActivity extends ListActivity {
 			} else if(line.equals(BAKERLOO_LINE)) {
 				view.setBackgroundResource(R.drawable.gradient_bakerloo);
 				if(_isLoggedIn) {
-					RatingBar resultRating = (RatingBar) ratingLayout.findViewById(R.id.rating_bar);
+					RatingBar resultRating = (RatingBar) rateLayout.findViewById(R.id.rating_bar);
 	            	resultRating.setRating(_ratings.get(BAKERLOO_LINE));
-	            	TextView users = (TextView) lowerLayout.findViewById(R.id.number_info_text);
+	            	TextView users = (TextView) rateLayout.findViewById(R.id.number_info_text);
 	            	setNumberOfUSersInTextView(users, _numberOfRatingsPerLine.get(line));
-	            	Button button = (Button) ratingLayout.findViewById(R.id.rate_button); 
+	            	Button button = (Button) buttonLayout.findViewById(R.id.rate_button); 
 	            	if(rated) {
 	            		button.setVisibility(View.GONE);
 	            	} else {
@@ -667,11 +667,11 @@ public class TubeLineActivity extends ListActivity {
 			} else if(line.equals(WATERLOO_CITY_LINE)) {
 				view.setBackgroundResource(R.drawable.gradient_waterloo);
 				if(_isLoggedIn) {
-					RatingBar resultRating = (RatingBar) ratingLayout.findViewById(R.id.rating_bar);
+					RatingBar resultRating = (RatingBar) rateLayout.findViewById(R.id.rating_bar);
 	            	resultRating.setRating(_ratings.get(WATERLOO_CITY_LINE));
-	            	TextView users = (TextView) lowerLayout.findViewById(R.id.number_info_text);
+	            	TextView users = (TextView) rateLayout.findViewById(R.id.number_info_text);
 	            	setNumberOfUSersInTextView(users, _numberOfRatingsPerLine.get(line));
-	            	Button button = (Button) ratingLayout.findViewById(R.id.rate_button); 
+	            	Button button = (Button) buttonLayout.findViewById(R.id.rate_button); 
 	            	if(rated) {
 	            		button.setVisibility(View.GONE);
 	            	} else {
@@ -681,11 +681,11 @@ public class TubeLineActivity extends ListActivity {
 			} else if(line.equals(CENTRAL_LINE)) {
 				view.setBackgroundResource(R.drawable.gradient_central);
 				if(_isLoggedIn) {
-					RatingBar resultRating = (RatingBar) ratingLayout.findViewById(R.id.rating_bar);
+					RatingBar resultRating = (RatingBar) rateLayout.findViewById(R.id.rating_bar);
 	            	resultRating.setRating(_ratings.get(CENTRAL_LINE));
-	            	TextView users = (TextView) lowerLayout.findViewById(R.id.number_info_text);
+	            	TextView users = (TextView) rateLayout.findViewById(R.id.number_info_text);
 	            	setNumberOfUSersInTextView(users, _numberOfRatingsPerLine.get(line));
-	            	Button button = (Button) ratingLayout.findViewById(R.id.rate_button); 
+	            	Button button = (Button) buttonLayout.findViewById(R.id.rate_button); 
 	            	if(rated) {
 	            		button.setVisibility(View.GONE);
 	            	} else {
@@ -695,9 +695,11 @@ public class TubeLineActivity extends ListActivity {
 			} else if(line.equals(JUBILEE_LINE)) {
 				view.setBackgroundResource(R.drawable.gradient_jubilee);
 				if(_isLoggedIn) {
-					RatingBar resultRating = (RatingBar) ratingLayout.findViewById(R.id.rating_bar);
+					RatingBar resultRating = (RatingBar) rateLayout.findViewById(R.id.rating_bar);
 	            	resultRating.setRating(_ratings.get(JUBILEE_LINE));
-	            	Button button = (Button) ratingLayout.findViewById(R.id.rate_button); 
+	            	TextView users = (TextView) rateLayout.findViewById(R.id.number_info_text);
+	            	setNumberOfUSersInTextView(users, _numberOfRatingsPerLine.get(line));
+	            	Button button = (Button) buttonLayout.findViewById(R.id.rate_button); 
 	            	if(rated) {
 	            		button.setVisibility(View.GONE);
 	            	} else {
@@ -707,11 +709,11 @@ public class TubeLineActivity extends ListActivity {
 			} else if(line.equals(METROPOLITAN_LINE)) {
 				view.setBackgroundResource(R.drawable.gradient_metropolitan);
 				if(_isLoggedIn) {
-					RatingBar resultRating = (RatingBar) ratingLayout.findViewById(R.id.rating_bar);
+					RatingBar resultRating = (RatingBar) rateLayout.findViewById(R.id.rating_bar);
 	            	resultRating.setRating(_ratings.get(METROPOLITAN_LINE));
-	            	TextView users = (TextView) lowerLayout.findViewById(R.id.number_info_text);
+	            	TextView users = (TextView) rateLayout.findViewById(R.id.number_info_text);
 	            	setNumberOfUSersInTextView(users, _numberOfRatingsPerLine.get(line));
-	            	Button button = (Button) ratingLayout.findViewById(R.id.rate_button); 
+	            	Button button = (Button) buttonLayout.findViewById(R.id.rate_button); 
 	            	if(rated) {
 	            		button.setVisibility(View.GONE);
 	            	} else {
@@ -721,11 +723,11 @@ public class TubeLineActivity extends ListActivity {
 			} else if(line.equals(NORTHERN_LINE)) {
 				view.setBackgroundResource(R.drawable.gradient_northern);
 				if(_isLoggedIn) {
-					RatingBar resultRating = (RatingBar) ratingLayout.findViewById(R.id.rating_bar);
+					RatingBar resultRating = (RatingBar) rateLayout.findViewById(R.id.rating_bar);
 	            	resultRating.setRating(_ratings.get(NORTHERN_LINE));
-	            	TextView users = (TextView) lowerLayout.findViewById(R.id.number_info_text);
+	            	TextView users = (TextView) rateLayout.findViewById(R.id.number_info_text);
 	            	setNumberOfUSersInTextView(users, _numberOfRatingsPerLine.get(line));
-	            	Button button = (Button) ratingLayout.findViewById(R.id.rate_button); 
+	            	Button button = (Button) buttonLayout.findViewById(R.id.rate_button); 
 	            	if(rated) {
 	            		button.setVisibility(View.GONE);
 	            	} else {
@@ -735,11 +737,11 @@ public class TubeLineActivity extends ListActivity {
 			} else if(line.equals(DLR_LINE)) {
 				view.setBackgroundResource(R.drawable.gradient_dlr);
 				if(_isLoggedIn) {
-					RatingBar resultRating = (RatingBar) ratingLayout.findViewById(R.id.rating_bar);
+					RatingBar resultRating = (RatingBar) rateLayout.findViewById(R.id.rating_bar);
 	            	resultRating.setRating(_ratings.get(DLR_LINE));
-	            	TextView users = (TextView) lowerLayout.findViewById(R.id.number_info_text);
+	            	TextView users = (TextView) rateLayout.findViewById(R.id.number_info_text);
 	            	setNumberOfUSersInTextView(users, _numberOfRatingsPerLine.get(line));
-	            	Button button = (Button) ratingLayout.findViewById(R.id.rate_button); 
+	            	Button button = (Button) buttonLayout.findViewById(R.id.rate_button); 
 	            	if(rated) {
 	            		button.setVisibility(View.GONE);
 	            	} else {
@@ -749,11 +751,11 @@ public class TubeLineActivity extends ListActivity {
 			} else if(line.equals(OVERGROUND_LINE)) {
 				view.setBackgroundResource(R.drawable.gradient_overground);
 				if(_isLoggedIn) {
-					RatingBar resultRating = (RatingBar) ratingLayout.findViewById(R.id.rating_bar);
+					RatingBar resultRating = (RatingBar) rateLayout.findViewById(R.id.rating_bar);
 	            	resultRating.setRating(_ratings.get(OVERGROUND_LINE));
-	            	TextView users = (TextView) lowerLayout.findViewById(R.id.number_info_text);
+	            	TextView users = (TextView) rateLayout.findViewById(R.id.number_info_text);
 	            	setNumberOfUSersInTextView(users, _numberOfRatingsPerLine.get(line));
-	            	Button button = (Button) ratingLayout.findViewById(R.id.rate_button); 
+	            	Button button = (Button) buttonLayout.findViewById(R.id.rate_button); 
 	            	if(rated) {
 	            		button.setVisibility(View.GONE);
 	            	} else {
