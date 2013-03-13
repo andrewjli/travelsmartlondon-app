@@ -103,33 +103,47 @@ public class TubeIntermediateActivity extends Activity {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				Intent newIntent = new Intent(TubeIntermediateActivity.this, TubeCountdownActivity.class);
 				newIntent.putExtra(ID_CODE, input);
-				newIntent.putExtra(EXTRA_MESSAGE, name);
 				//intent.putStringArrayListExtra(TUBE_LINES, tubeList.get(marker).getLinesAsArrayList());
 				ArrayList<String> lineList = new ArrayList<String>();
 				String lineClicked = ((TextView)view.findViewById(R.id.line_name_text_intermediate)).getText().toString();
+				String newName = name;
 				if(lineClicked.equals(TubeLineActivity.BAKERLOO_LINE)) {
 					lineList.add("B");
+					newName += " - " + TubeLineActivity.BAKERLOO_LINE + " line";
 				} else if(lineClicked.equals(TubeLineActivity.CENTRAL_LINE)) {
 					lineList.add("C");
+					newName += " - " + TubeLineActivity.CENTRAL_LINE + " line";
 				} else if(lineClicked.equals(TubeLineActivity.VICTORIA_LINE)) {
 					lineList.add("V");
+					newName += " - " + TubeLineActivity.VICTORIA_LINE + " line";
 				} else if(lineClicked.equals(TubeLineActivity.DISTRICT_LINE)) {
 					lineList.add("D");
+					newName += " - " + TubeLineActivity.DISTRICT_LINE + " line";
 				} else if(lineClicked.equals(HAMMERSMITH_CIRCLE)) {
 					lineList.add("H");
+					newName += " - " + HAMMERSMITH_CIRCLE + " line";
 				} else if(lineClicked.equals(TubeLineActivity.JUBILEE_LINE)) {
 					lineList.add("J");
+					newName += " - " + TubeLineActivity.JUBILEE_LINE + " line";
 				} else if(lineClicked.equals(TubeLineActivity.METROPOLITAN_LINE)) {
 					lineList.add("M");
+					newName += " - " + TubeLineActivity.METROPOLITAN_LINE + " line";
 				} else if(lineClicked.equals(TubeLineActivity.NORTHERN_LINE)) {
 					lineList.add("N");
+					newName += " - " + TubeLineActivity.NORTHERN_LINE + " line";
 				} else if(lineClicked.equals(TubeLineActivity.PICCADILLY_LINE)) {
 					lineList.add("P");
+					newName += " - " + TubeLineActivity.PICCADILLY_LINE + " line";
 				} else if(lineClicked.equals(TubeLineActivity.WATERLOO_CITY_LINE)) {
 					lineList.add("W");
+					newName += " - " + TubeLineActivity.WATERLOO_CITY_LINE + " line";
 				}
 				newIntent.putStringArrayListExtra(TUBE_LINES, lineList);
+				newIntent.putExtra(EXTRA_MESSAGE, newName);
 				startActivity(newIntent);
+				if(_entryList.size() == 1) {
+					finish();
+				}
 			} 
 		});
 	}
