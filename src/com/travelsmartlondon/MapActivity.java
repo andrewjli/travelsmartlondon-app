@@ -398,7 +398,7 @@ public class MapActivity extends FragmentActivity implements OnMarkerClickListen
 
 	private void showTubeIntent(Marker marker){
 		System.out.println("Event Listened");
-		Intent intent = new Intent(this, TubeCountdownActivity.class);
+		Intent intent = new Intent(this, TubeIntermediateActivity.class);
 		intent.putExtra(ID_CODE, tubeList.get(marker).getCode());
 		intent.putExtra(EXTRA_MESSAGE, tubeList.get(marker).getName());
 		intent.putStringArrayListExtra(TUBE_LINES, tubeList.get(marker).getLinesAsArrayList());

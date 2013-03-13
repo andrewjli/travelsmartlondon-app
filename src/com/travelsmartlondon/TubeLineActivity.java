@@ -551,7 +551,7 @@ public class TubeLineActivity extends ListActivity {
 						            	   _ratings.put(line, rating.getRating());
 						            	   
 						            	   TextView users = (TextView) rateLayout.findViewById(R.id.number_info_text);
-						            	   users.setText("You just rated " + line + " line with " + rating.getRating());
+						            	   users.setText("Rating " + rating.getRating() + " submitted!");
 						            	   
 						            	   RatingBar temporaryRatingBar = (RatingBar) rateLayout.findViewById(R.id.rating_bar);
 						            	   temporaryRatingBar.setRating(rating.getRating());

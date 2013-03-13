@@ -44,10 +44,10 @@
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="AIzaSyA0FTTwYDUnSPhSPJqxldR16O-SnkFZdoY" />
-        <!-- 
+        <!--
         debug : AIzaSyA0FTTwYDUnSPhSPJqxldR16O-SnkFZdoY
         release: AIzaSyAi-A88kWkKNCk05GaioIL_R4zfimGOyrk
-         -->
+        -->
 
         <activity
             android:name="com.travelsmartlondon.BusCountdownActivity"
@@ -81,7 +81,12 @@
         <activity
             android:name="com.travelsmartlondon.TubeLineActivity"
             android:label="@string/title_activity_tube_line"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.travelsmartlondon.TubeIntermediateActivity"
+            android:label="@string/title_activity_tube_intermediate"
+            android:theme="@android:style/Theme.Dialog" >
         </activity>
     </application>
 
