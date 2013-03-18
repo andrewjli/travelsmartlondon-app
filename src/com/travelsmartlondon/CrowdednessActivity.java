@@ -13,7 +13,14 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.conn.ClientConnectionManager;
+import org.apache.http.conn.scheme.PlainSocketFactory;
+import org.apache.http.conn.scheme.Scheme;
+import org.apache.http.conn.scheme.SchemeRegistry;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpParams;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -35,6 +42,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -335,26 +343,65 @@ public class CrowdednessActivity extends ListActivity {
 
 			String stationNLC = params[0];
 
-			HttpClient httpClient = new DefaultHttpClient();
+			HttpParams httpParams = new BasicHttpParams();
+		    SchemeRegistry registry = new SchemeRegistry();
+		    registry.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));
+		    ClientConnectionManager cm = new ThreadSafeClientConnManager(httpParams, registry);
+			HttpClient httpClient = new DefaultHttpClient(cm, httpParams);
 
-			HttpGet httpGet = new HttpGet(
+			HttpGet httpGetComments = new HttpGet(
 					"http://stud-tfl.cs.ucl.ac.uk/getcomments?fetchAllForStation="
 							+ stationNLC);
+			
+			String currentStationNameEncoded = "";
+			try {
+				currentStationNameEncoded = URLEncoder.encode(_currentStationName, "UTF-8");
+			} catch (UnsupportedEncodingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			HttpGet httpGetTwitter = new HttpGet("http://stud-tfl.cs.ucl.ac.uk/gettwitter?fetchforstation="
+					+currentStationNameEncoded);
 
 			try {
-				HttpResponse httpResponse = httpClient.execute(httpGet);
+				HttpResponse httpResponseComments = httpClient.execute(httpGetComments);
+				
+				HttpResponse httpResponseTwitter = httpClient.execute(httpGetTwitter);
 
 				BufferedReader reader = new BufferedReader(
-						new InputStreamReader(httpResponse.getEntity()
+						new InputStreamReader(httpResponseComments.getEntity()
 								.getContent(), "UTF-8"));
 
-				String jsonString = reader.readLine();
-
+				String jsonStringComments = reader.readLine();
+				
+				reader = new BufferedReader(
+						new InputStreamReader(httpResponseTwitter.getEntity()
+								.getContent(), "UTF-8"));
+				
+				String jsonStringTwitter = reader.readLine();
+				
 				reader.close();
-
-				JSONArray jsonArrayComments = new JSONArray(jsonString);
-
 				ArrayList<CommentEntry> comments = new ArrayList<CommentEntry>();
+				//Add the twitter comments to the Arraylist
+				
+				JSONArray jsonArrayTwitter  = new JSONArray(jsonStringTwitter);
+				
+				for(int n =1; n<jsonArrayTwitter.length();n++){
+					JSONObject twitterEntryObject = jsonArrayTwitter.getJSONObject(n);
+					
+					String twitterComment = twitterEntryObject.getString("text");
+					
+					CommentEntry twitterEntry = new CommentEntry(twitterComment,"Twitter");
+					
+					comments.add(0,twitterEntry);
+					
+				}
+				
+				
+				//Add the general comments to the Arraylist
+
+				JSONArray jsonArrayComments = new JSONArray(jsonStringComments);
 
 				for (int n = 1; n < jsonArrayComments.length(); n++) {
 
@@ -365,11 +412,12 @@ public class CrowdednessActivity extends ListActivity {
 					String comment = URLDecoder.decode(
 							commentEntryObject.getString("comment"), "UTF-8");
 
-					CommentEntry commentEntry = new CommentEntry(userName,
-							comment);
+					CommentEntry commentEntry = new CommentEntry(comment,"Comment");
+					commentEntry.setUserName(userName);
 
 					comments.add(0, commentEntry);
 				}
+				
 
 				_commentAdapter = new CommentAdapter(CrowdednessActivity.this,
 						R.layout.comment_row, comments);
@@ -408,6 +456,7 @@ public class CrowdednessActivity extends ListActivity {
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
 			View newView = convertView;
+
 			if (newView == null) {
 				LayoutInflater layoutInflater = (LayoutInflater) getContext()
 						.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -415,15 +464,24 @@ public class CrowdednessActivity extends ListActivity {
 			}
 			CommentEntry cm = _comments.get(position);
 			if (cm != null) {
+				
 				TextView commentText = (TextView) newView
 						.findViewById(R.id.comment);
 				ImageView commentImg = (ImageView) newView
 						.findViewById(R.id.commentImg);
+				
 				if (commentText != null) {
 					commentText.setText(cm.getComment());
 				}
 				if (commentImg != null) {
-					commentImg.setImageResource(R.drawable.speech_bubble);
+					if((cm.getType()).equals("Comment")){
+						commentImg.setImageResource(R.drawable.speech_bubble);
+						newView.setBackgroundColor(Color.parseColor("#fff0f5"));
+					}
+					else{
+						commentImg.setImageResource(R.drawable.white_twit_bird);
+						newView.setBackgroundColor(Color.parseColor("#00aced"));
+					}
 				}
 			}
 			return newView;

@@ -4,10 +4,15 @@ public class CommentEntry {
 	
 	private String _comment; 
 	private String _userName;
+	private String _type;
 	
-	public CommentEntry(String userName, String comment){
-		this._comment = comment;
-		this._userName = userName;
+	public CommentEntry(String comment_, String type_){
+		this._comment = comment_;
+		this._type = type_;
+	}
+	
+	public void setUserName(String userName_){
+		this._userName = userName_;
 	}
 	
 	public String getUserID(){
@@ -16,6 +21,10 @@ public class CommentEntry {
 	
 	public String getComment(){
 		return this._comment;
+	}
+	
+	public String getType(){
+		return this._type;
 	}
 
 }
