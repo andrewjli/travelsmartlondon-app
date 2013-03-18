@@ -76,7 +76,8 @@ public class MainActivity extends Activity {
 					TSLApplicationContext.getInstance().injectEmailAddressOnceUserLoggedIn(null);
 					((TextView)view).setText(LOGIN_WITH_GOOGLE);
 				} else if(((TextView)view).getText().toString() == ABOUT_US) {
-					//TODO: Implement the screen
+					Intent intent = new Intent(MainActivity.this,AboutUsActivity.class);
+					startActivity(intent);
 				}
 			}
 	    });

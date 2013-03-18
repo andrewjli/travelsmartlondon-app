@@ -6,10 +6,9 @@
     <string name="title_activity_results">Bus Countdown</string>
     <string name="title_activity_tube_choice_fragment">TubeChoiceFragment</string>
     <string name="title_activity_tube_countdown">TubeCountdownActivity</string>
-    <string name="hello_world">Hello world!</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="title_activity_crowdedness">CrowdednessActivity</string>
-    <string name="comments_no_items">No Comments to be displayed</string>
+    <string name="comments_no_items">Comments loading, please wait...</string>
 
     <string-array name="time">
         <item>Time</item>
@@ -103,5 +102,6 @@
     <string name="title_activity_tube_line">Tube Line Status Updates</string>
     <string name="rate_button">RATE</string>
     <string name="title_activity_tube_intermediate">TubeIntermediateActivity</string>
+    <string name="title_activity_about_us">About Travel Smart London</string>
 
 </resources>
